@@ -1,5 +1,12 @@
 import words from 'an-array-of-english-words';
 
+// Pre-process word list for better performance
+const validWordsSet = new Set(
+  words
+    .filter(w => w.length >= 4) // Only words 4+ letters
+    .map(w => w.toUpperCase())  // Convert to uppercase once
+);
+
 // Spelling Bee configuration
 export const MIN_WORD_LENGTH = 4;
 export const HEXAGON_LETTERS = 7;
@@ -68,9 +75,8 @@ export const isValidSpellingBeeWord = (word, letters) => {
     if (!upperLetters.includes(char)) return false;
   }
   
-  // Must be a real English word
-  const validWords = words.filter(w => w.length >= MIN_WORD_LENGTH);
-  return validWords.map(w => w.toUpperCase()).includes(upperWord);
+  // Must be a real English word (using pre-processed Set for O(1) lookup)
+  return validWordsSet.has(upperWord);
 };
 
 /**
@@ -111,20 +117,64 @@ export const isPangram = (word, letters) => {
   return upperLetters.every(letter => uniqueLettersUsed.has(letter));
 };
 
+// Cache for expensive operations
+const possibleWordsCache = new Map();
+const totalPointsCache = new Map();
+
 /**
- * Find all possible words for a letter set
+ * Find all possible words for a letter set (optimized with caching)
  */
 export const findAllPossibleWords = (letters) => {
-  const validWords = words.filter(w => w.length >= MIN_WORD_LENGTH);
-  return validWords.filter(word => isValidSpellingBeeWord(word, letters));
+  const cacheKey = letters.slice().sort().join('');
+  
+  if (possibleWordsCache.has(cacheKey)) {
+    return possibleWordsCache.get(cacheKey);
+  }
+  
+  const upperLetters = letters.map(l => l.toUpperCase());
+  const centerLetter = upperLetters[CENTER_LETTER_INDEX];
+  const letterSet = new Set(upperLetters);
+  
+  const possibleWords = [];
+  
+  // Iterate through our pre-processed word set
+  for (const word of validWordsSet) {
+    // Must contain center letter
+    if (!word.includes(centerLetter)) continue;
+    
+    // All letters must be from the available set
+    let isValid = true;
+    for (const char of word) {
+      if (!letterSet.has(char)) {
+        isValid = false;
+        break;
+      }
+    }
+    
+    if (isValid) {
+      possibleWords.push(word);
+    }
+  }
+  
+  possibleWordsCache.set(cacheKey, possibleWords);
+  return possibleWords;
 };
 
 /**
- * Calculate total possible points for a letter set
+ * Calculate total possible points for a letter set (optimized with caching)
  */
 export const calculateTotalPossiblePoints = (letters) => {
+  const cacheKey = letters.slice().sort().join('');
+  
+  if (totalPointsCache.has(cacheKey)) {
+    return totalPointsCache.get(cacheKey);
+  }
+  
   const allWords = findAllPossibleWords(letters);
-  return allWords.reduce((total, word) => total + calculateWordPoints(word, letters), 0);
+  const total = allWords.reduce((total, word) => total + calculateWordPoints(word, letters), 0);
+  
+  totalPointsCache.set(cacheKey, total);
+  return total;
 };
 
 /**

@@ -3,6 +3,7 @@ import { GameProvider, useGame } from './context/GameContext';
 import { SpellingBeeProvider } from './context/SpellingBeeContext';
 import GameSelector from './components/GameSelector';
 import SpellingBeeGame from './components/SpellingBeeGame';
+import SimpleSpellingBeeTest from './components/SimpleSpellingBeeTest';
 import Header from './components/Header';
 import GameBoard from './components/GameBoard';
 import Keyboard from './components/Keyboard';
@@ -160,11 +161,22 @@ const App = () => {
   }
   
   if (selectedGame === 'spelling-bee') {
-    return (
-      <SpellingBeeProvider>
-        <SpellingBeeGame onBackToMenu={handleBackToMenu} />
-      </SpellingBeeProvider>
-    );
+    try {
+      return (
+        <SpellingBeeProvider>
+          <SpellingBeeGame onBackToMenu={handleBackToMenu} />
+        </SpellingBeeProvider>
+      );
+    } catch (error) {
+      console.error('Error loading Spelling Bee:', error);
+      return (
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <h2>Error loading Spelling Bee</h2>
+          <p>Error: {error.message}</p>
+          <button onClick={handleBackToMenu}>Back to Games</button>
+        </div>
+      );
+    }
   }
   
   return <GameSelector onSelectGame={handleGameSelect} />;

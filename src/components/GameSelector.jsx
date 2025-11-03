@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import './GameSelector.css';
 
 const games = [
@@ -19,6 +19,18 @@ const games = [
 ];
 
 const GameSelector = ({ onSelectGame }) => {
+  const handleGameSelect = useCallback((gameId) => {
+    if (onSelectGame && typeof onSelectGame === 'function') {
+      onSelectGame(gameId);
+    }
+  }, [onSelectGame]);
+
+  const handleButtonClick = useCallback((gameId, event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    handleGameSelect(gameId);
+  }, [handleGameSelect]);
+
   return (
     <div className="game-selector">
       <header className="selector-header">
@@ -32,19 +44,14 @@ const GameSelector = ({ onSelectGame }) => {
             key={game.id}
             className="game-card"
             style={{ '--accent-color': game.color }}
-            onClick={() => {
-              onSelectGame(game.id);
-            }}
           >
             <div className="game-icon">{game.icon}</div>
             <h2 className="game-title">{game.title}</h2>
             <p className="game-description">{game.description}</p>
             <button 
               className="play-button"
-              onClick={(e) => {
-                e.stopPropagation(); // Prevent double firing
-                onSelectGame(game.id);
-              }}
+              onClick={(e) => handleButtonClick(game.id, e)}
+              type="button"
             >
               Play
             </button>
