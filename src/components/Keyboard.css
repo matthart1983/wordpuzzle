@@ -1,0 +1,163 @@
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  padding: 16px 0;
+}
+
+.keyboard-row {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.key {
+  min-width: 43px;
+  height: 58px;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--color-key-bg);
+  color: var(--color-key-text);
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  user-select: none;
+  text-transform: uppercase;
+}
+
+.key:hover {
+  opacity: 0.8;
+}
+
+.key:active {
+  transform: scale(0.95);
+}
+
+/* Special keys */
+.special-key {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.enter-key {
+  min-width: 65px;
+}
+
+.backspace-key {
+  min-width: 65px;
+  font-size: 18px;
+}
+
+/* Key states based on guesses */
+.key.unknown {
+  background-color: var(--color-key-bg);
+  color: var(--color-key-text);
+}
+
+.key.correct {
+  background-color: var(--color-tile-correct);
+  color: white;
+}
+
+.key.present {
+  background-color: var(--color-tile-present);
+  color: white;
+}
+
+.key.absent {
+  background-color: var(--color-tile-absent);
+  color: white;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .keyboard {
+    gap: 6px;
+    padding: 12px 0;
+  }
+  
+  .keyboard-row {
+    gap: 4px;
+  }
+  
+  .key {
+    min-width: 32px;
+    height: 48px;
+    font-size: 12px;
+  }
+  
+  .special-key {
+    font-size: 10px;
+  }
+  
+  .enter-key,
+  .backspace-key {
+    min-width: 48px;
+  }
+  
+  .backspace-key {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 350px) {
+  .key {
+    min-width: 28px;
+    height: 44px;
+    font-size: 11px;
+  }
+  
+  .enter-key,
+  .backspace-key {
+    min-width: 42px;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .key {
+    min-height: 52px;
+  }
+  
+  .key:hover {
+    opacity: 1;
+  }
+  
+  .key:active {
+    background-color: var(--color-border);
+    transform: scale(0.98);
+  }
+}
+
+/* High contrast mode */
+.high-contrast .key {
+  border: 2px solid var(--color-text);
+}
+
+.high-contrast .key.correct,
+.high-contrast .key.present,
+.high-contrast .key.absent {
+  border-width: 3px;
+}
+
+/* Animation for key press feedback */
+.key-pressed {
+  animation: keyPress 0.1s ease;
+}
+
+@keyframes keyPress {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

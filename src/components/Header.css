@@ -1,0 +1,90 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 16px;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  gap: 8px;
+  min-width: 80px;
+}
+
+.header-right {
+  justify-content: flex-end;
+}
+
+.header-center {
+  flex: 1;
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 0.2rem;
+  margin: 0;
+  user-select: none;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--color-text);
+  transition: background-color var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+}
+
+.icon-button:hover {
+  background-color: var(--color-border);
+}
+
+.icon-button:active {
+  transform: scale(0.95);
+}
+
+.back-button {
+  font-family: monospace;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+.back-button:hover {
+  background-color: var(--color-border);
+  transform: translateX(-2px);
+}
+
+.back-button:active {
+  transform: translateX(0) scale(0.95);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.5rem;
+    letter-spacing: 0.1rem;
+  }
+  
+  .icon-button {
+    font-size: 1.2rem;
+    min-width: 36px;
+    height: 36px;
+  }
+  
+  .header {
+    padding: 12px 0;
+  }
+}

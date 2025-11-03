@@ -1,0 +1,52 @@
+.game-board {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.board-row {
+  display: flex;
+  gap: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .game-board {
+    gap: 6px;
+    margin: 12px 0;
+  }
+  
+  .board-row {
+    gap: 6px;
+  }
+}
+
+@media (max-width: 350px) {
+  .game-board {
+    gap: 4px;
+  }
+  
+  .board-row {
+    gap: 4px;
+  }
+}
+
+/* Animation for completed rows */
+.board-row.completed {
+  animation: rowComplete 0.6s ease;
+}
+
+@keyframes rowComplete {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

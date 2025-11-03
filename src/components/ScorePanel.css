@@ -1,0 +1,184 @@
+.score-panel {
+  background: var(--color-tile-empty);
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.score-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.points-display {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.current-points {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #f7da21;
+}
+
+.max-points {
+  font-size: 1.2rem;
+  opacity: 0.7;
+}
+
+.percentage {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--color-text);
+}
+
+.rank-section {
+  margin-bottom: 16px;
+}
+
+.current-rank {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.rank-label {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.rank-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #f7da21;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+
+.next-rank {
+  margin-top: 12px;
+}
+
+.next-rank-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  opacity: 0.8;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--color-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f7da21, #e6c914);
+  border-radius: 4px;
+  transition: width var(--transition-normal);
+}
+
+.words-found {
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+}
+
+.words-count {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--color-text);
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .score-panel {
+    padding: 16px;
+  }
+  
+  .score-header {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  
+  .current-points {
+    font-size: 1.8rem;
+  }
+  
+  .percentage {
+    font-size: 1.2rem;
+  }
+  
+  .next-rank-info {
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+  }
+}
+
+/* Animations */
+.current-points {
+  animation: pointsUpdate 0.3s ease;
+}
+
+@keyframes pointsUpdate {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.progress-fill {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Dark theme adjustments */
+.dark-theme .progress-fill {
+  background: linear-gradient(90deg, #f7da21, #e6c914);
+}
+
+.dark-theme .current-points,
+.dark-theme .rank-name {
+  color: #f7da21;
+}
+
+/* High contrast mode */
+.high-contrast .score-panel {
+  border-width: 3px;
+}
+
+.high-contrast .current-points,
+.high-contrast .rank-name {
+  color: #ffff00;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}

@@ -1,0 +1,165 @@
+.word-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.input-container {
+  text-align: center;
+}
+
+.word-display {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 24px;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-tile-empty);
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  min-width: 200px;
+  transition: all var(--transition-normal);
+}
+
+.word-display.invalid {
+  border-color: #dc3545;
+  background: rgba(220, 53, 69, 0.1);
+  animation: shake 0.5s ease-in-out;
+}
+
+.placeholder {
+  color: var(--color-text);
+  opacity: 0.5;
+  font-weight: normal;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 1rem;
+}
+
+.input-message {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  min-height: 20px;
+  color: var(--color-text);
+  opacity: 0.8;
+}
+
+.input-controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.control-button {
+  padding: 12px 20px;
+  border: 2px solid var(--color-border);
+  background: var(--color-tile-empty);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  min-width: 80px;
+}
+
+.control-button:hover:not(:disabled) {
+  background: var(--color-border);
+  transform: translateY(-2px);
+}
+
+.control-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.control-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.delete-button:hover:not(:disabled) {
+  border-color: #dc3545;
+  background: rgba(220, 53, 69, 0.1);
+}
+
+.submit-button:hover:not(:disabled) {
+  border-color: #28a745;
+  background: rgba(40, 167, 69, 0.1);
+}
+
+.shuffle-button:hover:not(:disabled) {
+  border-color: #ffc107;
+  background: rgba(255, 193, 7, 0.1);
+}
+
+/* Animations */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.word-display.typing {
+  animation: typing 0.2s ease;
+}
+
+@keyframes typing {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .word-display {
+    min-width: 150px;
+    font-size: 1.2rem;
+    padding: 12px 16px;
+  }
+  
+  .control-button {
+    padding: 10px 16px;
+    font-size: 0.8rem;
+    min-width: 70px;
+  }
+  
+  .input-controls {
+    gap: 8px;
+  }
+}
+
+/* Dark theme adjustments */
+.dark-theme .word-display.invalid {
+  background: rgba(220, 53, 69, 0.2);
+}
+
+.dark-theme .delete-button:hover:not(:disabled) {
+  background: rgba(220, 53, 69, 0.2);
+}
+
+.dark-theme .submit-button:hover:not(:disabled) {
+  background: rgba(40, 167, 69, 0.2);
+}
+
+.dark-theme .shuffle-button:hover:not(:disabled) {
+  background: rgba(255, 193, 7, 0.2);
+}
+
+/* High contrast mode */
+.high-contrast .control-button {
+  border-width: 3px;
+  font-weight: 900;
+}
+
+.high-contrast .word-display {
+  border-width: 3px;
+}

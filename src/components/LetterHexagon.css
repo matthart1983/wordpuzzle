@@ -1,0 +1,162 @@
+.letter-hexagon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.hex-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.hex-letter {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border: 2px solid var(--color-border);
+  background: var(--color-tile-empty);
+  color: var(--color-text);
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.hex-letter:hover {
+  background: var(--color-border);
+  transform: scale(1.1);
+}
+
+.hex-letter:active {
+  transform: scale(0.95);
+}
+
+.hex-center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #f7da21;
+  border-color: #e6c914;
+  color: #000;
+  z-index: 2;
+}
+
+.hex-center:hover {
+  background: #f0d018;
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Hexagon positioning */
+.hex-top {
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.hex-top-right {
+  top: 25%;
+  right: 0;
+  transform: translate(0, -50%);
+}
+
+.hex-bottom-right {
+  bottom: 25%;
+  right: 0;
+  transform: translate(0, 50%);
+}
+
+.hex-bottom {
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.hex-bottom-left {
+  bottom: 25%;
+  left: 0;
+  transform: translate(0, 50%);
+}
+
+.hex-top-left {
+  top: 25%;
+  left: 0;
+  transform: translate(0, -50%);
+}
+
+/* Hover effects for positioned letters */
+.hex-top:hover {
+  transform: translate(-50%, 0) scale(1.1);
+}
+
+.hex-top-right:hover {
+  transform: translate(0, -50%) scale(1.1);
+}
+
+.hex-bottom-right:hover {
+  transform: translate(0, 50%) scale(1.1);
+}
+
+.hex-bottom:hover {
+  transform: translate(-50%, 0) scale(1.1);
+}
+
+.hex-bottom-left:hover {
+  transform: translate(0, 50%) scale(1.1);
+}
+
+.hex-top-left:hover {
+  transform: translate(0, -50%) scale(1.1);
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .hex-container {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .hex-letter {
+    width: 48px;
+    height: 48px;
+    font-size: 1.2rem;
+  }
+}
+
+/* Animation for letter press */
+.hex-letter.pressed {
+  animation: letterPress 0.2s ease;
+}
+
+@keyframes letterPress {
+  0% { transform: var(--original-transform); }
+  50% { transform: var(--original-transform) scale(0.9); }
+  100% { transform: var(--original-transform); }
+}
+
+/* Dark theme adjustments */
+.dark-theme .hex-center {
+  background: #f7da21;
+  color: #000;
+}
+
+.dark-theme .hex-center:hover {
+  background: #f0d018;
+}
+
+/* High contrast mode */
+.high-contrast .hex-letter {
+  border-width: 3px;
+  font-weight: 900;
+}
+
+.high-contrast .hex-center {
+  background: #ffff00;
+  color: #000;
+}

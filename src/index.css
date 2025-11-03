@@ -1,0 +1,186 @@
+/* CSS Variables for theming */
+:root {
+  /* Light theme colors */
+  --color-background: #ffffff;
+  --color-text: #000000;
+  --color-border: #d3d6da;
+  --color-tile-empty: #ffffff;
+  --color-tile-correct: #6aaa64;
+  --color-tile-present: #c9b458;
+  --color-tile-absent: #787c7e;
+  --color-key-bg: #d3d6da;
+  --color-key-text: #000000;
+  --color-key-special: #818384;
+  --color-modal-bg: #ffffff;
+  --color-modal-overlay: rgba(0, 0, 0, 0.5);
+  
+  /* Shadows */
+  --shadow-tile: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-key: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-modal: 0 10px 25px rgba(0, 0, 0, 0.2);
+  
+  /* Transitions */
+  --transition-fast: 0.1s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+/* Dark theme */
+.dark-theme {
+  --color-background: #121213;
+  --color-text: #ffffff;
+  --color-border: #3a3a3c;
+  --color-tile-empty: #121213;
+  --color-tile-correct: #538d4e;
+  --color-tile-present: #b59f3b;
+  --color-tile-absent: #3a3a3c;
+  --color-key-bg: #818384;
+  --color-key-text: #ffffff;
+  --color-key-special: #818384;
+  --color-modal-bg: #121213;
+}
+
+/* High contrast theme */
+.high-contrast {
+  --color-tile-correct: #f5793a;
+  --color-tile-present: #85c0f9;
+  --color-tile-absent: #000000;
+}
+
+/* Color blind friendly theme */
+.color-blind {
+  --color-tile-correct: #f5793a;
+  --color-tile-present: #85c0f9;
+}
+
+/* Base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.app.loading {
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-spinner {
+  font-size: 1.2rem;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 0;
+  gap: 24px;
+}
+
+.message-banner {
+  background-color: var(--color-tile-absent);
+  color: white;
+  padding: 12px;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: bold;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .app {
+    padding: 0 8px;
+  }
+  
+  .main-content {
+    gap: 16px;
+  }
+}
+
+@media (min-width: 768px) {
+  .app {
+    max-width: 600px;
+  }
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--color-tile-present);
+  outline-offset: 2px;
+}
+
+/* Animations */
+@keyframes flip {
+  0% {
+    transform: rotateX(0);
+  }
+  50% {
+    transform: rotateX(-90deg);
+  }
+  100% {
+    transform: rotateX(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 20% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+  80% {
+    transform: translateY(0);
+  }
+}
+
+/* Print styles */
+@media print {
+  .keyboard,
+  .header-right,
+  .header-left {
+    display: none;
+  }
+}

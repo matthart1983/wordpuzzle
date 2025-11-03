@@ -1,0 +1,300 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-modal-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: modalFadeIn 0.2s ease;
+}
+
+.modal-content {
+  background-color: var(--color-modal-bg);
+  border-radius: 8px;
+  box-shadow: var(--shadow-modal);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalSlideIn 0.3s ease;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px 0;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--color-text);
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color var(--transition-fast);
+}
+
+.modal-close:hover {
+  background-color: var(--color-border);
+}
+
+.modal-body {
+  padding: 0 24px 24px;
+}
+
+/* Statistics Modal */
+.statistics {
+  text-align: center;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+
+.guess-distribution {
+  margin-bottom: 32px;
+}
+
+.guess-distribution h3 {
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  margin-bottom: 16px;
+}
+
+.distribution-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.guess-number {
+  width: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.distribution-bar {
+  flex: 1;
+  height: 24px;
+  background-color: var(--color-border);
+  margin-left: 8px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background-color: var(--color-tile-absent);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  transition: width var(--transition-normal);
+}
+
+.bar-count {
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.share-button {
+  background-color: var(--color-tile-correct);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.share-button:hover {
+  opacity: 0.9;
+}
+
+.share-button:active {
+  transform: scale(0.98);
+}
+
+/* Settings Modal */
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.setting-row:last-child {
+  border-bottom: none;
+}
+
+.setting-info {
+  flex: 1;
+}
+
+.setting-title {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.setting-description {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-border);
+  transition: var(--transition-normal);
+  border-radius: 28px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: var(--transition-normal);
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--color-tile-correct);
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* Animations */
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .modal-overlay {
+    padding: 8px;
+  }
+  
+  .modal-header {
+    padding: 16px 16px 0;
+    margin-bottom: 16px;
+  }
+  
+  .modal-body {
+    padding: 0 16px 16px;
+  }
+  
+  .stats-grid {
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+  }
+  
+  .guess-distribution {
+    margin-bottom: 24px;
+  }
+}
+
+/* Dark mode specific adjustments */
+.dark-theme .bar-fill {
+  background-color: var(--color-tile-absent);
+}
+
+.dark-theme .slider {
+  background-color: var(--color-border);
+}
+
+.dark-theme .slider:before {
+  background-color: var(--color-background);
+}

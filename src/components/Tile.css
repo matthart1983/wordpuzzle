@@ -1,0 +1,112 @@
+.tile {
+  width: 62px;
+  height: 62px;
+  border: 2px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: var(--color-tile-empty);
+  color: var(--color-text);
+  transition: all var(--transition-normal);
+  user-select: none;
+  position: relative;
+}
+
+/* Letter states */
+.tile.unknown {
+  border-color: var(--color-border);
+  background-color: var(--color-tile-empty);
+}
+
+.tile.correct {
+  background-color: var(--color-tile-correct);
+  border-color: var(--color-tile-correct);
+  color: white;
+}
+
+.tile.present {
+  background-color: var(--color-tile-present);
+  border-color: var(--color-tile-present);
+  color: white;
+}
+
+.tile.absent {
+  background-color: var(--color-tile-absent);
+  border-color: var(--color-tile-absent);
+  color: white;
+}
+
+/* Tile with letter (being typed) */
+.tile[data-letter]:not([data-letter=""]) {
+  border-color: var(--color-text);
+  animation: tileTyping 0.1s ease;
+}
+
+/* Animations */
+.tile-typing {
+  animation: tileScale 0.1s ease;
+}
+
+.tile-flip {
+  animation: flip var(--transition-slow);
+}
+
+.tile-bounce {
+  animation: bounce 0.6s ease;
+}
+
+@keyframes tileScale {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes tileTyping {
+  0% {
+    border-color: var(--color-border);
+  }
+  100% {
+    border-color: var(--color-text);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .tile {
+    width: 52px;
+    height: 52px;
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .tile {
+    width: 48px;
+    height: 48px;
+    font-size: 1.2rem;
+  }
+}
+
+/* High contrast mode adjustments */
+.high-contrast .tile.correct,
+.high-contrast .tile.present,
+.high-contrast .tile.absent {
+  border-width: 3px;
+  font-weight: 900;
+}
+
+/* Animation delays for revealing tiles */
+.tile-flip:nth-child(1) { animation-delay: 0s; }
+.tile-flip:nth-child(2) { animation-delay: 0.1s; }
+.tile-flip:nth-child(3) { animation-delay: 0.2s; }
+.tile-flip:nth-child(4) { animation-delay: 0.3s; }
+.tile-flip:nth-child(5) { animation-delay: 0.4s; }
