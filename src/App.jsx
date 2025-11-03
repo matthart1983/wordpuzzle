@@ -3,7 +3,6 @@ import { GameProvider, useGame } from './context/GameContext';
 import { SpellingBeeProvider } from './context/SpellingBeeContext';
 import GameSelector from './components/GameSelector';
 import SpellingBeeGame from './components/SpellingBeeGame';
-import SimpleSpellingBeeTest from './components/SimpleSpellingBeeTest';
 import Header from './components/Header';
 import GameBoard from './components/GameBoard';
 import Keyboard from './components/Keyboard';
