@@ -71,6 +71,20 @@
   transform: translateX(0) scale(0.95);
 }
 
+.reset-button {
+  font-size: 1.4rem;
+  margin-right: 4px;
+}
+
+.reset-button:hover {
+  background-color: var(--color-border);
+  transform: rotate(180deg);
+}
+
+.reset-button:active {
+  transform: rotate(180deg) scale(0.95);
+}
+
 /* Responsive adjustments */
 @media (max-width: 480px) {
   .title {

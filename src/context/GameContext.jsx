@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import {
   getTodaysWord,
+  getRandomWord,
   isValidWord,
   evaluateGuess,
   getGameState,
@@ -159,7 +160,7 @@ const gameReducer = (state, action) => {
       };
       
     case ACTIONS.NEW_GAME:
-      const newWord = getTodaysWord();
+      const newWord = getRandomWord(); // Use random word for reset
       clearGameState();
       return {
         ...state,

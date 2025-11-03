@@ -23,7 +23,8 @@ const SpellingBeeContent = ({ onBackToMenu }) => {
     addLetter,
     deleteLetter,
     submitWord,
-    shuffleLetters
+    shuffleLetters,
+    newGame
   } = useSpellingBee();
   
   // Handle keyboard input
@@ -63,16 +64,14 @@ const SpellingBeeContent = ({ onBackToMenu }) => {
       <Header
         onStatsClick={() => {}} // TODO: Implement stats modal
         onSettingsClick={() => {}} // TODO: Implement settings modal
+        onBackClick={onBackToMenu}
+        onResetClick={newGame}
+        title="SPELLING BEE"
         gameState="playing"
         guesses={[]}
+        showBackButton={true}
+        showResetButton={true}
       />
-      
-      <div className="game-header">
-        <button className="back-button" onClick={onBackToMenu}>
-          ← Back to Games
-        </button>
-        <h1 className="game-title">Spelling Bee</h1>
-      </div>
       
       <main className="main-content">
         <ScorePanel

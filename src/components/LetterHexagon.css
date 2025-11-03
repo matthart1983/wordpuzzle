@@ -3,22 +3,34 @@
   justify-content: center;
   align-items: center;
   margin: 20px 0;
+  animation: fadeInScale 0.8s ease-out;
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .hex-container {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 240px;
+  height: 240px;
+  /* Remove background as hexagons will now touch */
 }
 
 .hex-letter {
   position: absolute;
-  width: 60px;
-  height: 60px;
-  border: 2px solid var(--color-border);
+  width: 80px;
+  height: 80px;
   background: var(--color-tile-empty);
   color: var(--color-text);
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: bold;
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -27,15 +39,48 @@
   align-items: center;
   justify-content: center;
   user-select: none;
+  
+  /* Create hexagon shape using clip-path */
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  
+  /* Remove any default styling that might create square borders */
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.hex-letter::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-border);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  z-index: -1;
+}
+
+.hex-letter::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  background: inherit;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  z-index: -1;
 }
 
 .hex-letter:hover {
   background: var(--color-border);
-  transform: scale(1.1);
+  transform: scale(1.05);
+  z-index: 10;
 }
 
 .hex-letter:active {
-  transform: scale(0.95);
+  transform: scale(0.98);
 }
 
 .hex-center {
@@ -43,89 +88,151 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: #f7da21;
-  border-color: #e6c914;
   color: #000;
   z-index: 2;
 }
 
-.hex-center:hover {
-  background: #f0d018;
-  transform: translate(-50%, -50%) scale(1.1);
+.hex-center::before {
+  background: #e6c914;
 }
 
-/* Hexagon positioning */
+.hex-center::after {
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+}
+
+.hex-center:hover {
+  background: #f0d018;
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+.hex-center:hover::before {
+  background: #d4b812;
+}
+
+/* Hexagon positioning - honeycomb layout with proper spacing */
 .hex-top {
-  top: 0;
+  top: 20px;
   left: 50%;
   transform: translate(-50%, 0);
 }
 
 .hex-top-right {
-  top: 25%;
-  right: 0;
-  transform: translate(0, -50%);
+  top: 50px;
+  right: 20px;
+  transform: translate(0, 0);
 }
 
 .hex-bottom-right {
-  bottom: 25%;
-  right: 0;
-  transform: translate(0, 50%);
+  bottom: 50px;
+  right: 20px;
+  transform: translate(0, 0);
 }
 
 .hex-bottom {
-  bottom: 0;
+  bottom: 20px;
   left: 50%;
   transform: translate(-50%, 0);
 }
 
 .hex-bottom-left {
-  bottom: 25%;
-  left: 0;
-  transform: translate(0, 50%);
+  bottom: 50px;
+  left: 20px;
+  transform: translate(0, 0);
 }
 
 .hex-top-left {
-  top: 25%;
-  left: 0;
-  transform: translate(0, -50%);
+  top: 50px;
+  left: 20px;
+  transform: translate(0, 0);
 }
 
-/* Hover effects for positioned letters */
+/* Hover effects for positioned letters - maintain tight positioning */
 .hex-top:hover {
-  transform: translate(-50%, 0) scale(1.1);
+  transform: translate(-50%, 0) scale(1.05);
 }
 
 .hex-top-right:hover {
-  transform: translate(0, -50%) scale(1.1);
+  transform: translate(0, 0) scale(1.05);
 }
 
 .hex-bottom-right:hover {
-  transform: translate(0, 50%) scale(1.1);
+  transform: translate(0, 0) scale(1.05);
 }
 
 .hex-bottom:hover {
-  transform: translate(-50%, 0) scale(1.1);
+  transform: translate(-50%, 0) scale(1.05);
 }
 
 .hex-bottom-left:hover {
-  transform: translate(0, 50%) scale(1.1);
+  transform: translate(0, 0) scale(1.05);
 }
 
 .hex-top-left:hover {
-  transform: translate(0, -50%) scale(1.1);
+  transform: translate(0, 0) scale(1.05);
 }
 
 /* Responsive design */
 @media (max-width: 480px) {
   .hex-container {
-    width: 160px;
-    height: 160px;
+    width: 200px;
+    height: 200px;
   }
   
   .hex-letter {
-    width: 48px;
-    height: 48px;
-    font-size: 1.2rem;
+    width: 64px;
+    height: 64px;
+    font-size: 1.4rem;
+    /* Maintain hexagon shape and clear borders */
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+  
+  .hex-letter::after {
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+  }
+  
+  .hex-center::after {
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+  }
+  
+  /* Adjust positioning for smaller hexagons with proper spacing */
+  .hex-top {
+    top: 16px;
+  }
+  
+  .hex-top-right {
+    top: 40px;
+    right: 16px;
+  }
+  
+  .hex-bottom-right {
+    bottom: 40px;
+    right: 16px;
+  }
+  
+  .hex-bottom {
+    bottom: 16px;
+  }
+  
+  .hex-bottom-left {
+    bottom: 40px;
+    left: 16px;
+  }
+  
+  .hex-top-left {
+    top: 40px;
+    left: 16px;
   }
 }
 
@@ -135,9 +242,20 @@
 }
 
 @keyframes letterPress {
-  0% { transform: var(--original-transform); }
-  50% { transform: var(--original-transform) scale(0.9); }
-  100% { transform: var(--original-transform); }
+  0% { 
+    transform: var(--original-transform); 
+  }
+  50% { 
+    transform: var(--original-transform) scale(0.95);
+  }
+  100% { 
+    transform: var(--original-transform); 
+  }
+}
+
+/* Subtle hover effect that doesn't break honeycomb layout */
+.hex-letter:hover {
+  filter: brightness(1.1);
 }
 
 /* Dark theme adjustments */
@@ -146,17 +264,46 @@
   color: #000;
 }
 
+.dark-theme .hex-center::before {
+  background: #e6c914;
+}
+
 .dark-theme .hex-center:hover {
   background: #f0d018;
 }
 
+.dark-theme .hex-center:hover::before {
+  background: #d4b812;
+}
+
 /* High contrast mode */
 .high-contrast .hex-letter {
-  border-width: 3px;
   font-weight: 900;
+}
+
+.high-contrast .hex-letter::before {
+  background: var(--color-border);
+}
+
+.high-contrast .hex-letter::after {
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
 }
 
 .high-contrast .hex-center {
   background: #ffff00;
   color: #000;
+}
+
+.high-contrast .hex-center::before {
+  background: #cccc00;
+}
+
+.high-contrast .hex-center::after {
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
 }

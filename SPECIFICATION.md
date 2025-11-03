@@ -1,4 +1,4 @@
-# Wordle Clone - Game Specification
+# Word Guess Game - Game Specification
 
 ## Table of Contents
 1. [Overview](#overview)
@@ -13,7 +13,7 @@
 ## Overview
 
 ### Project Description
-A web-based clone of the popular Wordle puzzle game where players attempt to guess a 5-letter word within 6 attempts. The game provides feedback through color-coded tiles to guide players toward the correct answer.
+A web-based word puzzle game where players attempt to guess a 5-letter word within 6 attempts. The game provides feedback through color-coded tiles to guide players toward the correct answer.
 
 ### Target Audience
 - Casual puzzle game enthusiasts
@@ -33,7 +33,7 @@ A web-based clone of the popular Wordle puzzle game where players attempt to gue
    - Must be a valid English word
    - Case-insensitive input
 3. **Attempt Limit**: Maximum of 6 guesses per game
-4. **Daily Challenge**: One puzzle per day (like original Wordle)
+4. **Daily Challenge**: One puzzle per day with consistent word selection
 
 ### Feedback System
 After each guess, tiles change color to provide feedback:
@@ -52,7 +52,7 @@ After each guess, tiles change color to provide feedback:
 ### Game Board Layout
 ```
 ┌─────────────────────────────────┐
-│           WORDLE CLONE          │
+│           WORD GUESS            │
 ├─────────────────────────────────┤
 │  [_] [_] [_] [_] [_]  Attempt 1 │
 │  [_] [_] [_] [_] [_]  Attempt 2 │

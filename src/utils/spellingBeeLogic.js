@@ -58,6 +58,29 @@ export const getTodaysSpellingBee = () => {
 };
 
 /**
+ * Get a random Spelling Bee puzzle for practice/reset mode
+ */
+export const getRandomSpellingBee = () => {
+  const puzzleSets = [
+    ['G', 'R', 'O', 'U', 'N', 'D', 'S'], // CENTER: G
+    ['A', 'L', 'M', 'O', 'S', 'T', 'R'], // CENTER: A
+    ['C', 'H', 'A', 'I', 'R', 'S', 'T'], // CENTER: C
+    ['P', 'L', 'A', 'N', 'T', 'S', 'E'], // CENTER: P
+    ['F', 'L', 'O', 'W', 'E', 'R', 'S'], // CENTER: F
+    ['B', 'R', 'I', 'G', 'H', 'T', 'S'], // CENTER: B
+    ['M', 'O', 'R', 'N', 'I', 'G', 'T'], // CENTER: M
+    ['W', 'I', 'N', 'T', 'E', 'R', 'S'], // CENTER: W
+    ['T', 'H', 'I', 'N', 'K', 'S', 'G'], // CENTER: T
+    ['L', 'I', 'G', 'H', 'T', 'S', 'R'], // CENTER: L
+    ['S', 'P', 'A', 'C', 'E', 'R', 'D'], // CENTER: S
+    ['H', 'E', 'A', 'R', 'T', 'S', 'L'], // CENTER: H
+  ];
+  
+  const randomIndex = Math.floor(Math.random() * puzzleSets.length);
+  return puzzleSets[randomIndex];
+};
+
+/**
  * Check if a word is valid for the current Spelling Bee
  */
 export const isValidSpellingBeeWord = (word, letters) => {

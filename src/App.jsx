@@ -24,6 +24,7 @@ const GameContent = ({ onBackToMenu }) => {
     addLetter,
     removeLetter,
     submitGuess,
+    newGame,
     updateSettings,
     targetWord
   } = useGame();
@@ -96,9 +97,11 @@ const GameContent = ({ onBackToMenu }) => {
         onStatsClick={() => setShowStats(true)}
         onSettingsClick={() => setShowSettings(true)}
         onBackClick={onBackToMenu}
+        onResetClick={newGame}
         gameState={gameState}
         guesses={guesses}
         showBackButton={true}
+        showResetButton={true}
       />
       
       <main className="main-content">
@@ -151,7 +154,7 @@ const App = () => {
     setSelectedGame(null);
   };
   
-  if (selectedGame === 'wordle') {
+  if (selectedGame === 'wordguess') {
     return (
       <GameProvider>
         <GameContent onBackToMenu={handleBackToMenu} />
@@ -159,7 +162,7 @@ const App = () => {
     );
   }
   
-  if (selectedGame === 'spelling-bee') {
+  if (selectedGame === 'letter-hunt') {
     try {
       return (
         <SpellingBeeProvider>

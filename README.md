@@ -1,17 +1,17 @@
-# NYT Games Clone
+# Word Puzzle Games
 
-A collection of New York Times puzzle games built with React and Vite. Currently includes Wordle and Spelling Bee clones.
+A collection of engaging word puzzle games built with React and Vite. Currently includes Word Guess and Letter Hunt games.
 
 ## 🎮 Games Included
 
-### Wordle
+### Word Guess
 - Guess the 5-letter word in 6 tries
 - Daily puzzles with consistent word selection
 - Comprehensive statistics tracking
 - Multiple themes (dark mode, high contrast, color blind friendly)
 - Share results functionality
 
-### Spelling Bee
+### Letter Hunt
 - Find words using 7 given letters (must include center letter)
 - Scoring system with ranks from Beginner to Queen Bee
 - Pangram detection (words using all 7 letters)
@@ -25,7 +25,7 @@ A collection of New York Times puzzle games built with React and Vite. Currently
 - **Accessibility**: Support for keyboard navigation and screen readers
 - **Theme support**: Dark mode, high contrast, and color blind friendly options
 - **Local storage**: Game progress and statistics are saved locally
-- **Modern UI**: Clean, intuitive interface inspired by NYT Games
+- **Modern UI**: Clean, intuitive interface for optimal gaming experience
 
 ## 🚀 Getting Started
 
@@ -37,8 +37,8 @@ A collection of New York Times puzzle games built with React and Vite. Currently
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/nyt-games-clone.git
-cd nyt-games-clone
+git clone https://github.com/yourusername/word-puzzle-games.git
+cd word-puzzle-games
 ```
 
 2. Install dependencies:
@@ -74,21 +74,21 @@ src/
 ├── components/          # Reusable UI components
 │   ├── GameSelector.jsx # Game selection interface
 │   ├── Header.jsx       # Common header component
-│   ├── wordle/          # Wordle-specific components
-│   └── spelling-bee/    # Spelling Bee components
+│   ├── wordguess/       # Word Guess-specific components
+│   └── letterhunt/      # Letter Hunt components
 ├── context/             # React context providers
-│   ├── GameContext.jsx  # Wordle game state
-│   └── SpellingBeeContext.jsx # Spelling Bee state
+│   ├── GameContext.jsx  # Word Guess game state
+│   └── SpellingBeeContext.jsx # Letter Hunt state
 ├── utils/               # Utility functions
 │   ├── gameLogic.js     # Core game logic
-│   ├── spellingBeeLogic.js # Spelling Bee logic
+│   ├── spellingBeeLogic.js # Letter Hunt logic
 │   └── storage.js       # Local storage utilities
 └── App.jsx             # Main application component
 ```
 
 ## 🎯 Game Rules
 
-### Wordle
+### Word Guess
 1. Guess the 5-letter word in 6 tries
 2. Each guess must be a valid English word
 3. Color feedback after each guess:
@@ -96,7 +96,7 @@ src/
    - 🟨 Yellow: Letter is in the word but wrong position
    - ⬜ Gray: Letter is not in the word
 
-### Spelling Bee
+### Letter Hunt
 1. Create words using the 7 given letters
 2. Words must be at least 4 letters long
 3. Words must include the center letter (highlighted in yellow)
@@ -115,11 +115,10 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-This project is for educational purposes only. It's a clone of New York Times games and is not affiliated with or endorsed by The New York Times Company.
+This project is an original collection of word puzzle games created for educational and entertainment purposes.
 
 ## 🙏 Acknowledgments
 
-- The New York Times for creating the original games
 - The open-source community for the tools and libraries used
 - Word list from `an-array-of-english-words` package
 

@@ -3,15 +3,15 @@ import './GameSelector.css';
 
 const games = [
   {
-    id: 'wordle',
-    title: 'Wordle',
+    id: 'wordguess',
+    title: 'Word Guess',
     description: 'Guess the 5-letter word in 6 tries',
     icon: '🔤',
     color: '#6aaa64'
   },
   {
-    id: 'spelling-bee',
-    title: 'Spelling Bee',
+    id: 'letter-hunt',
+    title: 'Letter Hunt',
     description: 'Find words using the given letters',
     icon: '🐝',
     color: '#f7da21'
@@ -34,7 +34,7 @@ const GameSelector = ({ onSelectGame }) => {
   return (
     <div className="game-selector">
       <header className="selector-header">
-        <h1 className="selector-title">NYT Games Clone</h1>
+        <h1 className="selector-title">Word Puzzle Games</h1>
         <p className="selector-subtitle">Choose your puzzle</p>
       </header>
       
@@ -60,7 +60,7 @@ const GameSelector = ({ onSelectGame }) => {
       </div>
       
       <footer className="selector-footer">
-        <p>Built as educational clones of New York Times games</p>
+        <p>Original word puzzle games for brain training</p>
       </footer>
     </div>
   );

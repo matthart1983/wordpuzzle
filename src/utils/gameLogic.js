@@ -41,6 +41,14 @@ export const getTodaysWord = () => {
 };
 
 /**
+ * Get a random word for practice/reset mode
+ */
+export const getRandomWord = () => {
+  const randomIndex = Math.floor(Math.random() * answers.length);
+  return answers[randomIndex].toUpperCase();
+};
+
+/**
  * Check if a word is valid (in our comprehensive dictionary)
  */
 export const isValidWord = (word) => {
@@ -150,7 +158,7 @@ export const generateShareText = (guesses, targetWord, gameState) => {
   const today = new Date();
   const dayNumber = Math.floor((today - new Date('2025-01-01')) / (1000 * 60 * 60 * 24)) + 1;
   
-  let shareText = `Wordle Clone ${dayNumber} `;
+  let shareText = `Word Guess ${dayNumber} `;
   
   if (gameState === GAME_STATES.WON) {
     shareText += `${guesses.length}/${MAX_ATTEMPTS}\n\n`;

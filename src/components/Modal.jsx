@@ -27,7 +27,7 @@ export const StatisticsModal = ({ isOpen, onClose, statistics, guesses, targetWo
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Wordle Clone',
+          title: 'Word Guess Game',
           text: shareText
         });
       } catch (error) {

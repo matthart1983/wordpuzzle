@@ -3,9 +3,9 @@
  */
 
 const STORAGE_KEYS = {
-  GAME_STATE: 'wordle-game-state',
-  STATISTICS: 'wordle-statistics',
-  SETTINGS: 'wordle-settings'
+  GAME_STATE: 'wordguess-game-state',
+  STATISTICS: 'wordguess-statistics',
+  SETTINGS: 'wordguess-settings'
 };
 
 /**

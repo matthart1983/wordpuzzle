@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import {
   getTodaysSpellingBee,
+  getRandomSpellingBee,
   isValidSpellingBeeWord,
   calculateWordPoints,
   isPangram,
@@ -151,7 +152,7 @@ const spellingBeeReducer = (state, action) => {
       
     case ACTIONS.NEW_GAME:
       clearGameState();
-      const newLetters = getTodaysSpellingBee();
+      const newLetters = getRandomSpellingBee(); // Use random puzzle for reset
       const newCenterLetter = newLetters[0];
       const newShuffledLetters = shuffleLetters(newLetters, newCenterLetter);
       const newTotalPossible = calculateTotalPossiblePoints(newLetters);
