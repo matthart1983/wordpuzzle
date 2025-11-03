@@ -121,7 +121,7 @@ const spellingBeeReducer = (state, action) => {
       
       // Save game state
       saveGameState({
-        gameType: 'spelling-bee',
+        gameType: 'letter-hunt',
         letters: state.letters,
         centerLetter: state.centerLetter,
         foundWords: newFoundWords,
@@ -187,10 +187,10 @@ export const SpellingBeeProvider = ({ children }) => {
       const todaysLetters = getTodaysSpellingBee();
       const today = new Date().toDateString();
       
-      // Check if saved game is from today and is spelling bee
+      // Check if saved game is from today and is letter hunt
       const isToday = savedGame && 
         savedGame.date === today && 
-        savedGame.gameType === 'spelling-bee' &&
+        savedGame.gameType === 'letter-hunt' &&
         JSON.stringify(savedGame.letters) === JSON.stringify(todaysLetters);
       
       if (isToday) {
@@ -298,7 +298,7 @@ export const SpellingBeeProvider = ({ children }) => {
   );
 };
 
-// Hook to use spelling bee context
+// Hook to use letter hunt context
 export const useSpellingBee = () => {
   const context = useContext(SpellingBeeContext);
   if (!context) {

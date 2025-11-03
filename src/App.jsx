@@ -170,10 +170,10 @@ const App = () => {
         </SpellingBeeProvider>
       );
     } catch (error) {
-      console.error('Error loading Spelling Bee:', error);
+      console.error('Error loading Letter Hunt:', error);
       return (
         <div style={{ padding: '20px', textAlign: 'center' }}>
-          <h2>Error loading Spelling Bee</h2>
+          <h2>Error loading Letter Hunt</h2>
           <p>Error: {error.message}</p>
           <button onClick={handleBackToMenu}>Back to Games</button>
         </div>

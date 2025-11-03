@@ -51,7 +51,7 @@ const SpellingBeeContent = ({ onBackToMenu }) => {
   if (isLoading) {
     return (
       <div className="spelling-bee-game loading">
-        <div className="loading-spinner">Loading Spelling Bee...</div>
+        <div className="loading-spinner">Loading Letter Hunt...</div>
       </div>
     );
   }
@@ -66,7 +66,7 @@ const SpellingBeeContent = ({ onBackToMenu }) => {
         onSettingsClick={() => {}} // TODO: Implement settings modal
         onBackClick={onBackToMenu}
         onResetClick={newGame}
-        title="SPELLING BEE"
+        title="LETTER HUNT"
         gameState="playing"
         guesses={[]}
         showBackButton={true}

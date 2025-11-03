@@ -7,7 +7,7 @@ const validWordsSet = new Set(
     .map(w => w.toUpperCase())  // Convert to uppercase once
 );
 
-// Spelling Bee configuration
+// Letter Hunt configuration
 export const MIN_WORD_LENGTH = 4;
 export const HEXAGON_LETTERS = 7;
 export const CENTER_LETTER_INDEX = 0; // Center letter is first in array
@@ -34,7 +34,7 @@ export const RANKS = [
 ];
 
 /**
- * Generate today's Spelling Bee puzzle
+ * Generate today's Letter Hunt puzzle
  */
 export const getTodaysSpellingBee = () => {
   // Use date as seed for reproducible daily puzzles
@@ -58,7 +58,7 @@ export const getTodaysSpellingBee = () => {
 };
 
 /**
- * Get a random Spelling Bee puzzle for practice/reset mode
+ * Get a random Letter Hunt puzzle for practice/reset mode
  */
 export const getRandomSpellingBee = () => {
   const puzzleSets = [
@@ -81,7 +81,7 @@ export const getRandomSpellingBee = () => {
 };
 
 /**
- * Check if a word is valid for the current Spelling Bee
+ * Check if a word is valid for the current Letter Hunt
  */
 export const isValidSpellingBeeWord = (word, letters) => {
   if (!word || word.length < MIN_WORD_LENGTH) return false;
