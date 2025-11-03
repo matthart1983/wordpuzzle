@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { GameProvider, useGame } from './context/GameContext';
 import { SpellingBeeProvider } from './context/SpellingBeeContext';
+import { SudokuProvider } from './context/SudokuContext';
+import { Game2048Provider } from './context/Game2048Context';
 import GameSelector from './components/GameSelector';
 import SpellingBeeGame from './components/SpellingBeeGame';
+import SudokuGame from './components/SudokuGame';
+import Game2048 from './components/Game2048';
 import Header from './components/Header';
 import GameBoard from './components/GameBoard';
 import Keyboard from './components/Keyboard';
@@ -174,6 +178,45 @@ const App = () => {
       return (
         <div style={{ padding: '20px', textAlign: 'center' }}>
           <h2>Error loading Letter Hunt</h2>
+          <p>Error: {error.message}</p>
+          <button onClick={handleBackToMenu}>Back to Games</button>
+        </div>
+      );
+    }
+  }
+  
+  if (selectedGame === 'sudoku-mini') {
+    try {
+      return (
+        <SudokuProvider>
+          <SudokuGame onBackToMenu={handleBackToMenu} />
+        </SudokuProvider>
+      );
+    } catch (error) {
+      console.error('Error loading Sudoku Mini:', error);
+      return (
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <h2>Error loading Sudoku Mini</h2>
+          <p>Error: {error.message}</p>
+          <button onClick={handleBackToMenu}>Back to Games</button>
+        </div>
+      );
+    }
+  }
+  
+  
+  if (selectedGame === '2048') {
+    try {
+      return (
+        <Game2048Provider>
+          <Game2048 onBackToMenu={handleBackToMenu} />
+        </Game2048Provider>
+      );
+    } catch (error) {
+      console.error('Error loading 2048:', error);
+      return (
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <h2>Error loading 2048</h2>
           <p>Error: {error.message}</p>
           <button onClick={handleBackToMenu}>Back to Games</button>
         </div>

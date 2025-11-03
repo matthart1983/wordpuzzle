@@ -15,6 +15,20 @@ const games = [
     description: 'Find words using the given letters',
     icon: '🐝',
     color: '#f7da21'
+  },
+  {
+    id: 'sudoku-mini',
+    title: 'Sudoku Mini',
+    description: 'Solve the 4x4 number puzzle',
+    icon: '🔢',
+    color: '#4a90e2'
+  },
+  {
+    id: '2048',
+    title: '2048',
+    description: 'Combine tiles to reach 2048',
+    icon: '🎯',
+    color: '#ed4c67'
   }
 ];
 
@@ -34,7 +48,7 @@ const GameSelector = ({ onSelectGame }) => {
   return (
     <div className="game-selector">
       <header className="selector-header">
-        <h1 className="selector-title">Word Puzzle Games</h1>
+        <h1 className="selector-title">Puzzle Games</h1>
         <p className="selector-subtitle">Choose your puzzle</p>
       </header>
       
@@ -60,7 +74,7 @@ const GameSelector = ({ onSelectGame }) => {
       </div>
       
       <footer className="selector-footer">
-        <p>Original word puzzle games for brain training</p>
+        <p>Original puzzle games for brain training</p>
       </footer>
     </div>
   );
