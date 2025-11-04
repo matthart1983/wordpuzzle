@@ -113,7 +113,7 @@ const KenKenBoard = ({ state, actions }) => {
   );
 };
 
-const KenKenToolbar = ({ state, actions }) => {
+const KenKenToolbar = ({ state, actions, onHowToPlayClick }) => {
   const { size, notesMode, validationOn, canUndo, canRedo, difficulties } = state;
   const { setSize, toggleNotesMode, toggleValidation, undo, redo, newPuzzle, hint } = actions;
 
@@ -122,6 +122,7 @@ const KenKenToolbar = ({ state, actions }) => {
       <div className="group">
         <button onClick={() => newPuzzle()}>New</button>
         <button onClick={hint}>Hint</button>
+        <button onClick={onHowToPlayClick}>How to Play</button>
       </div>
       <div className="group">
         <label>
@@ -165,6 +166,7 @@ const KenKenGame = ({ onBackToMenu }) => {
   const [showHighScores, setShowHighScores] = useState(false);
   const [showWinModal, setShowWinModal] = useState(false);
   const [hasShownWinModal, setHasShownWinModal] = useState(false);
+  const [showHowToPlay, setShowHowToPlay] = useState(false);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -227,7 +229,7 @@ const KenKenGame = ({ onBackToMenu }) => {
       />
 
       <div className="game-container">
-        <KenKenToolbar state={state} actions={actions} />
+        <KenKenToolbar state={state} actions={actions} onHowToPlayClick={() => setShowHowToPlay(true)} />
         <KenKenBoard state={state} actions={actions} />
         <div className="game-stats">
           <div className="stat">
@@ -287,6 +289,55 @@ const KenKenGame = ({ onBackToMenu }) => {
                 Close
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* How to Play Modal */}
+      {showHowToPlay && (
+        <div className="modal-overlay" onClick={() => setShowHowToPlay(false)}>
+          <div className="modal how-to-play" onClick={e => e.stopPropagation()}>
+            <h3>How to Play KenKen</h3>
+            <div className="instructions">
+              <p><strong>Goal:</strong> Fill the grid so each row and column contains each number exactly once</p>
+              
+              <div className="rule">
+                <strong>Rules:</strong>
+                <ul>
+                  <li>Each row must contain numbers 1 through N (where N is the grid size)</li>
+                  <li>Each column must contain numbers 1 through N</li>
+                  <li>Numbers cannot repeat in any row or column</li>
+                  <li>Bold outlined regions are "cages" with a target number and operation</li>
+                  <li>Numbers in each cage must combine (using the operation) to equal the target</li>
+                </ul>
+              </div>
+              
+              <div className="operations">
+                <strong>Cage Operations:</strong>
+                <ul>
+                  <li><strong>Addition (+)</strong> - Numbers in cage add up to the target</li>
+                  <li><strong>Subtraction (−)</strong> - Difference between numbers equals the target</li>
+                  <li><strong>Multiplication (×)</strong> - Numbers multiply to the target</li>
+                  <li><strong>Division (÷)</strong> - One number divided by another equals the target</li>
+                </ul>
+              </div>
+              
+              <div className="tips">
+                <strong>Tips:</strong>
+                <ul>
+                  <li>Start with single-cell cages - they give you the exact number!</li>
+                  <li>Look for cages with few possibilities</li>
+                  <li>Use Notes mode to mark possible numbers</li>
+                  <li>Check rows and columns for uniqueness as you go</li>
+                </ul>
+              </div>
+            </div>
+            <button 
+              className="close-btn"
+              onClick={() => setShowHowToPlay(false)}
+            >
+              Got it!
+            </button>
           </div>
         </div>
       )}

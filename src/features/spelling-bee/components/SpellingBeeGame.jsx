@@ -16,6 +16,7 @@ const SpellingBeeContent = ({ onBackToMenu }) => {
   const [showHighScores, setShowHighScores] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showUserProfile, setShowUserProfile] = useState(false);
+  const [showHowToPlay, setShowHowToPlay] = useState(false);
   const [settings, setSettings] = useState(getSettings);
   const [userName, setUserName] = useState(getUserDisplayName());
   const [userAvatar, setUserAvatar] = useState(getUserProfile().avatar);
@@ -133,11 +134,12 @@ const SpellingBeeContent = ({ onBackToMenu }) => {
           currentWord={currentWord}
         />
         
-        <div className="game-instructions">
-          <p>Find words using these letters. Every word must include the center letter (yellow).</p>
-          <p>Words must be at least 4 letters long. Click letters or use your keyboard!</p>
-          <p><strong>Tip:</strong> Press spacebar to shuffle the outer letters.</p>
-        </div>
+        <button 
+          className="how-to-play-btn"
+          onClick={() => setShowHowToPlay(true)}
+        >
+          How to Play
+        </button>
         
         <FoundWords
           words={foundWords}
@@ -168,6 +170,54 @@ const SpellingBeeContent = ({ onBackToMenu }) => {
           onClose={() => setShowUserProfile(false)}
           onProfileUpdate={handleUserProfileUpdate}
         />
+      )}
+
+      {/* How to Play Modal */}
+      {showHowToPlay && (
+        <div className="modal-overlay" onClick={() => setShowHowToPlay(false)}>
+          <div className="modal how-to-play" onClick={e => e.stopPropagation()}>
+            <h3>How to Play Letter Hunt</h3>
+            <div className="instructions">
+              <p><strong>Goal:</strong> Create words using the 7 given letters to earn points and achieve ranks</p>
+              
+              <div className="rule">
+                <strong>Rules:</strong>
+                <ul>
+                  <li>Words must be at least 4 letters long</li>
+                  <li>Every word must include the center letter (yellow hexagon)</li>
+                  <li>Letters can be used more than once in a word</li>
+                  <li>Only valid English words are accepted</li>
+                </ul>
+              </div>
+              
+              <div className="scoring">
+                <strong>Scoring:</strong>
+                <ul>
+                  <li>4-letter words: 1 point</li>
+                  <li>Longer words: 1 point per letter</li>
+                  <li>Pangrams (use all 7 letters): 7 extra points!</li>
+                  <li>Earn ranks from Beginner to Queen Bee based on total points</li>
+                </ul>
+              </div>
+              
+              <div className="tips">
+                <strong>Tips:</strong>
+                <ul>
+                  <li>Click hexagon letters or use your keyboard to spell words</li>
+                  <li>Press Spacebar to shuffle the outer letters</li>
+                  <li>Look for common prefixes and suffixes</li>
+                  <li>Try to find the pangram for maximum points!</li>
+                </ul>
+              </div>
+            </div>
+            <button 
+              className="close-btn"
+              onClick={() => setShowHowToPlay(false)}
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

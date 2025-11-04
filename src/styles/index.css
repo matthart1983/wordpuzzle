@@ -204,11 +204,52 @@ input:focus-visible {
   }
 }
 
+/* How to Play Button */
+.how-to-play-btn {
+  margin: 16px auto 0;
+  padding: 10px 20px;
+  background: var(--color-key-background);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.how-to-play-btn:hover {
+  background: var(--color-key-hover);
+  transform: translateY(-1px);
+}
+
+/* How to Play Modal Color Samples */
+.color-sample {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  color: white;
+}
+
+.color-sample.correct {
+  background: var(--color-tile-correct);
+}
+
+.color-sample.present {
+  background: var(--color-tile-present);
+}
+
+.color-sample.absent {
+  background: var(--color-tile-absent);
+}
+
 /* Print styles */
 @media print {
   .keyboard,
   .header-right,
-  .header-left {
+  .header-left,
+  .how-to-play-btn {
     display: none;
   }
 }

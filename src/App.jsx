@@ -48,6 +48,7 @@ const GameContent = ({ onBackToMenu }) => {
   const [showSettings, setShowSettings] = useState(false);
   const [showHighScores, setShowHighScores] = useState(false);
   const [showUserProfile, setShowUserProfile] = useState(false);
+  const [showHowToPlay, setShowHowToPlay] = useState(false);
   const [userName, setUserName] = useState(getUserDisplayName());
   const [userAvatar, setUserAvatar] = useState(getUserProfile().avatar);
   
@@ -153,6 +154,13 @@ const GameContent = ({ onBackToMenu }) => {
           onKeyPress={handleKeyPress}
           keyboardStates={keyboardStates}
         />
+        
+        <button 
+          className="how-to-play-btn"
+          onClick={() => setShowHowToPlay(true)}
+        >
+          How to Play
+        </button>
       </main>
       
       <StatisticsModal
@@ -186,6 +194,52 @@ const GameContent = ({ onBackToMenu }) => {
           onClose={() => setShowUserProfile(false)}
           onProfileUpdate={handleUserProfileUpdate}
         />
+      )}
+
+      {/* How to Play Modal */}
+      {showHowToPlay && (
+        <div className="modal-overlay" onClick={() => setShowHowToPlay(false)}>
+          <div className="modal how-to-play" onClick={e => e.stopPropagation()}>
+            <h3>How to Play Word Guess</h3>
+            <div className="instructions">
+              <p><strong>Goal:</strong> Guess the 5-letter word in 6 tries or fewer</p>
+              
+              <div className="rule">
+                <strong>Rules:</strong>
+                <ul>
+                  <li>Each guess must be a valid 5-letter English word</li>
+                  <li>Press Enter to submit your guess</li>
+                  <li>After each guess, tiles change color to show feedback</li>
+                </ul>
+              </div>
+              
+              <div className="feedback">
+                <strong>Color Feedback:</strong>
+                <ul>
+                  <li><span className="color-sample correct">Green</span> - Letter is correct and in the right position</li>
+                  <li><span className="color-sample present">Yellow</span> - Letter is in the word but wrong position</li>
+                  <li><span className="color-sample absent">Gray</span> - Letter is not in the word</li>
+                </ul>
+              </div>
+              
+              <div className="tips">
+                <strong>Tips:</strong>
+                <ul>
+                  <li>Start with common vowels and consonants</li>
+                  <li>Use the keyboard feedback to eliminate letters</li>
+                  <li>Pay attention to letter positions</li>
+                  <li>One puzzle per day - come back tomorrow for a new word!</li>
+                </ul>
+              </div>
+            </div>
+            <button 
+              className="close-btn"
+              onClick={() => setShowHowToPlay(false)}
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
