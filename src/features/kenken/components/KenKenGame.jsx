@@ -163,6 +163,7 @@ const KenKenGame = ({ onBackToMenu }) => {
   } = useKenKenGame();
 
   const [showHighScores, setShowHighScores] = useState(false);
+  const [showWinModal, setShowWinModal] = useState(false);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -186,7 +187,7 @@ const KenKenGame = ({ onBackToMenu }) => {
   }, [actions]);
 
   useEffect(() => {
-    if (isSolved) {
+    if (isSolved && !showWinModal) {
       // Save high score
       saveHighScore({
         gameType: 'kenken',
@@ -198,8 +199,10 @@ const KenKenGame = ({ onBackToMenu }) => {
         hintsUsed,
         mistakes
       });
+      // Show win modal
+      setShowWinModal(true);
     }
-  }, [isSolved]);
+  }, [isSolved, showWinModal, state.difficultyLabel, state.size, elapsedSeconds, hintsUsed, mistakes]);
 
   const headerTitle = useMemo(() => `KENKEN ${state.size}×${state.size}` , [state.size]);
 
@@ -242,6 +245,34 @@ const KenKenGame = ({ onBackToMenu }) => {
 
       {showHighScores && (
         <HighScores gameType="kenken" onClose={() => setShowHighScores(false)} />
+      )}
+
+      {/* Win Modal */}
+      {showWinModal && (
+        <div className="modal-overlay">
+          <div className="modal win-modal">
+            <h2>🎉 Congratulations!</h2>
+            <p>You solved the {state.size}×{state.size} KenKen puzzle!</p>
+            <div className="modal-stats">
+              <p><strong>Time:</strong> {elapsedSeconds}s</p>
+              <p><strong>Difficulty:</strong> {state.difficultyLabel}</p>
+              <p><strong>Hints Used:</strong> {hintsUsed}</p>
+              <p><strong>Mistakes:</strong> {mistakes}</p>
+            </div>
+            <div className="modal-buttons">
+              <button className="modal-btn primary" onClick={() => {
+                actions.newPuzzle();
+                resetTimer();
+                setShowWinModal(false);
+              }}>
+                New Puzzle
+              </button>
+              <button className="modal-btn secondary" onClick={() => setShowWinModal(false)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

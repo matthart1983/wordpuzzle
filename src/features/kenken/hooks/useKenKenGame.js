@@ -211,7 +211,13 @@ export const useKenKenGame = () => {
     return computeConflicts(grid, puzzle);
   }, [grid, puzzle, validationOn]);
 
-  const isSolved = useMemo(() => checkSolved(grid, puzzle), [grid, puzzle]);
+  const isSolved = useMemo(() => {
+    const solved = checkSolved(grid, puzzle);
+    if (solved) {
+      console.log('KenKen puzzle solved!', { grid, puzzle });
+    }
+    return solved;
+  }, [grid, puzzle]);
 
   const hint = useCallback(() => {
     if (!puzzle) return;
