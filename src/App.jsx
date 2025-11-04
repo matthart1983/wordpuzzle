@@ -2,11 +2,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { GameProvider, useGame } from './features/wordle/context/GameContext';
 import { SpellingBeeProvider } from './features/spelling-bee/context/SpellingBeeContext';
 import { SudokuProvider } from './features/sudoku/context/SudokuContext';
+import { SamuraiSudokuProvider } from './features/samurai-sudoku/context/SamuraiSudokuContext';
 import { Game2048Provider } from './features/game2048/context/Game2048Context';
 import { getUserDisplayName, getUserProfile } from './shared/utils/userProfile.js';
 import GameSelector from './shared/components/GameSelector';
 import SpellingBeeGame from './features/spelling-bee/components/SpellingBeeGame';
 import SudokuGame from './features/sudoku/components/SudokuGame';
+import SamuraiSudokuGame from './features/samurai-sudoku/components/SamuraiSudokuGame';
+import SamuraiSudokuTest from './features/samurai-sudoku/components/SamuraiSudokuTest';
 import Game2048 from './features/game2048/components/Game2048';
 import Header from './shared/components/Header';
 import GameBoard from './features/wordle/components/GameBoard';
@@ -233,6 +236,23 @@ const App = () => {
       return (
         <div style={{ padding: '20px', textAlign: 'center' }}>
           <h2>Error loading Sudoku Mini</h2>
+          <p>Error: {error.message}</p>
+          <button onClick={handleBackToMenu}>Back to Games</button>
+        </div>
+      );
+    }
+  }
+
+  if (selectedGame === 'samurai-sudoku') {
+    try {
+      return (
+        <SamuraiSudokuGame onBackToMenu={handleBackToMenu} />
+      );
+    } catch (error) {
+      console.error('Error loading Samurai Sudoku:', error);
+      return (
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <h2>Error loading Samurai Sudoku</h2>
           <p>Error: {error.message}</p>
           <button onClick={handleBackToMenu}>Back to Games</button>
         </div>

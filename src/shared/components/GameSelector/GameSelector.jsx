@@ -24,6 +24,13 @@ const games = [
     color: '#4a90e2'
   },
   {
+    id: 'samurai-sudoku',
+    title: 'Samurai Sudoku',
+    description: 'Master the 5-grid Sudoku challenge',
+    icon: '⚔️',
+    color: '#9c27b0'
+  },
+  {
     id: '2048',
     title: '2048',
     description: 'Combine tiles to reach 2048',

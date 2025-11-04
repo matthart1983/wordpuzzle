@@ -14,6 +14,7 @@ const Header = ({
   showBackButton = false, 
   showResetButton = false, 
   showHighScores = false,
+  showProfileInHeader = true,
   title = "WORD GUESS",
   userName,
   userAvatar 

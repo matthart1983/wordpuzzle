@@ -32,6 +32,15 @@ const HighScores = ({ gameType, onClose }) => {
         setEasyScores(easy);
         setMediumScores(medium);
         setHardScores(hard);
+      } else if (activeGameTab === 'samurai-sudoku') {
+        // Group Samurai Sudoku scores by difficulty
+        const easy = allScores.filter(score => score.difficulty === 'Easy').slice(0, 10);
+        const medium = allScores.filter(score => score.difficulty === 'Medium').slice(0, 10);
+        const hard = allScores.filter(score => score.difficulty === 'Hard').slice(0, 10);
+        
+        setEasyScores(easy);
+        setMediumScores(medium);
+        setHardScores(hard);
       } else {
         // For other games, just show all scores (they'll be grouped differently)
         setEasyScores(allScores.slice(0, 10));
@@ -87,6 +96,12 @@ const HighScores = ({ gameType, onClose }) => {
           meta: `${score.difficulty} • ${getGridSizeDisplay(score.grid_size)}${score.hints_used > 0 ? ` • ${score.hints_used} hints` : ''}${score.mistakes > 0 ? ` • ${score.mistakes} mistakes` : ''}`,
           sortValue: score.time_seconds
         };
+      case 'samurai-sudoku':
+        return {
+          primaryValue: formatTime(score.timeSeconds),
+          meta: `${score.difficulty} • Score: ${score.finalScore} • Hints: ${score.hintsUsed} • Mistakes: ${score.mistakes}`,
+          sortValue: score.timeSeconds
+        };
       case 'wordle':
         return {
           primaryValue: `${score.attempts}/${score.maxAttempts} attempts`,
@@ -117,6 +132,7 @@ const HighScores = ({ gameType, onClose }) => {
   const getGameDisplayName = (gameType) => {
     const gameNames = {
       'sudoku': 'Sudoku',
+      'samurai-sudoku': 'Samurai Sudoku',
       'wordle': 'Wordle',
       '2048': '2048',
       'spelling-bee': 'Spelling Bee'
@@ -298,6 +314,12 @@ const HighScores = ({ gameType, onClose }) => {
             🧩 Sudoku
           </button>
           <button 
+            className={`tab ${activeGameTab === 'samurai-sudoku' ? 'active' : ''}`}
+            onClick={() => setActiveGameTab('samurai-sudoku')}
+          >
+            ⚔️ Samurai Sudoku
+          </button>
+          <button 
             className={`tab ${activeGameTab === 'wordle' ? 'active' : ''}`}
             onClick={() => setActiveGameTab('wordle')}
           >
@@ -317,8 +339,8 @@ const HighScores = ({ gameType, onClose }) => {
           </button>
         </div>
 
-        {/* Difficulty Tabs (only for Sudoku) */}
-        {activeGameTab === 'sudoku' && (
+        {/* Difficulty Tabs (only for Sudoku games) */}
+        {(activeGameTab === 'sudoku' || activeGameTab === 'samurai-sudoku') && (
           <div className="tabs difficulty-tabs">
             <button 
               className={`tab ${activeDifficultyTab === 'easy' ? 'active' : ''}`}
@@ -352,7 +374,11 @@ const HighScores = ({ gameType, onClose }) => {
           {activeGameTab === 'sudoku' && activeDifficultyTab === 'medium' && renderDifficultyScores(mediumScores, 'Medium')}
           {activeGameTab === 'sudoku' && activeDifficultyTab === 'hard' && renderDifficultyScores(hardScores, 'Hard')}
           {activeGameTab === 'sudoku' && activeDifficultyTab === 'stats' && renderGameStats()}
-          {activeGameTab !== 'sudoku' && renderCurrentGameScores()}
+          {activeGameTab === 'samurai-sudoku' && activeDifficultyTab === 'easy' && renderDifficultyScores(easyScores, 'Easy')}
+          {activeGameTab === 'samurai-sudoku' && activeDifficultyTab === 'medium' && renderDifficultyScores(mediumScores, 'Medium')}
+          {activeGameTab === 'samurai-sudoku' && activeDifficultyTab === 'hard' && renderDifficultyScores(hardScores, 'Hard')}
+          {activeGameTab === 'samurai-sudoku' && activeDifficultyTab === 'stats' && renderGameStats()}
+          {activeGameTab !== 'sudoku' && activeGameTab !== 'samurai-sudoku' && renderCurrentGameScores()}
         </div>
       </div>
     </div>

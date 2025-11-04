@@ -1,0 +1,107 @@
+/* Samurai Sudoku Game Component Styles */
+
+.samurai-sudoku-game {
+  min-height: 100vh;
+  background-color: var(--samurai-grid-bg, #ffffff);
+  color: var(--samurai-text-primary, #333);
+}
+
+/* Stats Panel */
+.stats-panel {
+  background-color: var(--samurai-controls-bg, #f8f9fa);
+  border: 1px solid var(--samurai-controls-border, #e9ecef);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.stats-panel h3 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--samurai-text-primary, #333);
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--samurai-controls-border, #e9ecef);
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--samurai-text-primary, #666);
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--samurai-text-primary, #333);
+}
+
+/* Loading state */
+.samurai-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  font-size: 18px;
+  color: var(--samurai-text-primary, #666);
+  background-color: var(--samurai-controls-bg, #f8f9fa);
+  border-radius: 8px;
+  border: 2px dashed var(--samurai-controls-border, #e9ecef);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .stats-panel {
+    padding: 12px;
+  }
+  
+  .stat-item {
+    padding: 6px 0;
+  }
+  
+  .stat-label,
+  .stat-value {
+    font-size: 13px;
+  }
+  
+  .samurai-loading {
+    height: 300px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-panel {
+    padding: 10px;
+  }
+  
+  .stats-panel h3 {
+    font-size: 14px;
+  }
+  
+  .stat-item {
+    padding: 4px 0;
+  }
+  
+  .stat-label,
+  .stat-value {
+    font-size: 12px;
+  }
+  
+  .samurai-loading {
+    height: 250px;
+    font-size: 14px;
+    padding: 20px;
+    text-align: center;
+  }
+}

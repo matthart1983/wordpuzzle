@@ -1,0 +1,303 @@
+.samurai-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background-color: var(--controls-bg, #f8f9fa);
+  border-radius: 8px;
+  border: 1px solid var(--controls-border, #e9ecef);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.controls-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.controls-section h3 {
+  margin: 0 0 8px 0;
+  color: var(--controls-heading, #333);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Game Info Section */
+.game-stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: stretch;
+  width: 100%;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 110px;
+  padding: 8px 8px;
+  background: var(--stat-bg, #e9ecef);
+  border: 1px solid var(--stat-border, #dee2e6);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.stat-item:hover {
+  background: var(--stat-bg-hover, #dee2e6);
+  transform: translateY(-1px);
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--stat-label-color, #666);
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--stat-value-color, #333);
+}
+
+.stat-value.difficulty {
+  text-transform: capitalize;
+  color: var(--difficulty-color, #2196f3);
+}
+
+/* Game Actions Section */
+.game-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.control-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.control-btn.primary {
+  background-color: var(--btn-primary-bg, #2196f3);
+  color: var(--btn-primary-text, white);
+}
+
+.control-btn.primary:hover:not(:disabled) {
+  background-color: var(--btn-primary-hover, #1976d2);
+  transform: translateY(-1px);
+}
+
+.control-btn.secondary {
+  background-color: var(--btn-secondary-bg, #6c757d);
+  color: var(--btn-secondary-text, white);
+}
+
+.control-btn.secondary:hover:not(:disabled) {
+  background-color: var(--btn-secondary-hover, #5a6268);
+  transform: translateY(-1px);
+}
+
+.control-btn.tertiary {
+  background-color: var(--btn-tertiary-bg, #28a745);
+  color: var(--btn-tertiary-text, white);
+}
+
+.control-btn.tertiary:hover:not(:disabled) {
+  background-color: var(--btn-tertiary-hover, #218838);
+  transform: translateY(-1px);
+}
+
+/* Progress Info Section */
+.progress-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.progress-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-label {
+  font-size: 14px;
+  color: var(--progress-label-color, #666);
+  min-width: 80px;
+}
+
+.progress-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--progress-value-color, #333);
+  min-width: 60px;
+}
+
+.progress-value.mistakes {
+  color: var(--mistakes-color, #dc3545);
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background-color: var(--progress-bar-bg, #e9ecef);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--progress-fill-color, #28a745);
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+
+/* Completion Message Section */
+.completion-message {
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  color: white;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.completion-content h3 {
+  margin: 0 0 12px 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.completion-content p {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  opacity: 0.95;
+}
+
+.final-stats {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.final-stats span {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 12px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .samurai-controls {
+    padding: 16px;
+    gap: 16px;
+  }
+  
+  .game-stats {
+    justify-content: center;
+  }
+  
+  .stat-item {
+    min-width: 70px;
+  }
+  
+  .stat-value {
+    font-size: 16px;
+  }
+  
+  .action-group {
+    justify-content: center;
+  }
+  
+  .control-btn {
+    min-width: 80px;
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+  
+  .progress-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  .progress-label {
+    min-width: auto;
+    text-align: center;
+  }
+  
+  .final-stats {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .samurai-controls {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .game-stats {
+    gap: 4px;
+  }
+  
+  .stat-item {
+    min-width: 75px;
+    padding: 6px 6px;
+  }
+  
+  .stat-label {
+    font-size: 9px;
+  }
+  
+  .stat-value {
+    font-size: 12px;
+  }
+  
+  .control-btn {
+    min-width: 70px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  
+  .completion-content h3 {
+    font-size: 20px;
+  }
+  
+  .completion-content p {
+    font-size: 14px;
+  }
+}
