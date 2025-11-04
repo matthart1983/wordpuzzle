@@ -26,52 +26,71 @@ const KenKenCell = ({
     isConflict ? 'conflict' : ''
   ].filter(Boolean).join(' ');
 
+  // 3px for cage boundaries, 1px for internal cell dividers
   const borderStyles = {
-    borderTopWidth: topBorder ? 3 : 1,
-    borderLeftWidth: leftBorder ? 3 : 1,
-    borderRightWidth: rightBorder ? 3 : 1,
-    borderBottomWidth: bottomBorder ? 3 : 1
+    borderTopWidth: topBorder ? '3px' : '1px',
+    borderLeftWidth: leftBorder ? '3px' : '1px',
+    borderRightWidth: rightBorder ? '3px' : '1px',
+    borderBottomWidth: bottomBorder ? '3px' : '1px'
   };
 
   return (
     <div className={className} style={borderStyles} onClick={onClick}>
       {display ? (
         <div className="cell-value">{display}</div>
-      ) : (
+      ) : notes && notes.length > 0 ? (
         <div className="cell-notes">
           {Array.from({ length: size }, (_, i) => i + 1).map(n => (
-            <span key={n} className={notes?.includes(n) ? 'note-on' : 'note-off'}>{n}</span>
+            <span key={n} className={notes.includes(n) ? 'note-on' : 'note-off'}>
+              {notes.includes(n) ? n : ''}
+            </span>
           ))}
         </div>
-      )}
+      ) : null}
     </div>
   );
 };
 
 const KenKenBoard = ({ state, actions }) => {
   const { grid, size, cageMap, selected, conflicts } = state;
-  const { setSelected, inputNumber, clearCell } = actions;
+  const { setSelected } = actions;
 
-  const isBoundary = (r1, c1, r2, c2) => {
-    const a = cageMap[`${r1},${c1}`];
-    const b = cageMap[`${r2},${c2}`];
-    return a && b && a !== b;
+  // Check if two cells are in different cages (cage boundary)
+  const isCageBoundary = (r1, c1, r2, c2) => {
+    // Out of bounds check
+    if (r2 < 0 || r2 >= size || c2 < 0 || c2 >= size) {
+      return true; // Edge of board
+    }
+    const cage1 = cageMap[`${r1},${c1}`];
+    const cage2 = cageMap[`${r2},${c2}`];
+    return cage1 !== cage2;
   };
 
   return (
-    <div className="kenken-board" style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}>
+    <div 
+      className="kenken-board" 
+      style={{ 
+        '--grid-size': size,
+        gridTemplateColumns: `repeat(${size}, 60px)`,
+        gridTemplateRows: `repeat(${size}, 60px)`
+      }}
+    >
       {grid.map((row, r) => row.map((val, c) => {
         const key = `${r},${c}`;
         const sel = selected && selected.r === r && selected.c === c;
         const conf = conflicts.has(key);
-        const topBorder = r === 0 || isBoundary(r, c, r - 1, c);
-        const leftBorder = c === 0 || isBoundary(r, c, r, c - 1);
-        const rightBorder = c === size - 1 || isBoundary(r, c, r, c + 1);
-        const bottomBorder = r === size - 1 || isBoundary(r, c, r + 1, c);
+        
+        // Calculate borders: 3px if cage boundary, 1px if internal
+        const topBorder = r === 0 || isCageBoundary(r, c, r - 1, c);
+        const leftBorder = c === 0 || isCageBoundary(r, c, r, c - 1);
+        const rightBorder = c === size - 1 || isCageBoundary(r, c, r, c + 1);
+        const bottomBorder = r === size - 1 || isCageBoundary(r, c, r + 1, c);
+        
         const notes = state.notes[key] || [];
+        
         return (
           <div key={key} className="kenken-cell-wrapper">
-            {/* Cage label on the first cell of the cage */}
+            {/* Cage label on the first cell of each cage */}
             {state.cageLabels[key] && (
               <div className="cage-label">{state.cageLabels[key]}</div>
             )}
