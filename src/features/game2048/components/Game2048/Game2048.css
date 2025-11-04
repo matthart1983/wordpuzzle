@@ -83,13 +83,13 @@
 .game-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 4px;
+  gap: 8px;
   background: #bbada0;
   border: 3px solid #bbada0;
   border-radius: 8px;
-  padding: 4px;
-  width: 316px;
-  height: 316px;
+  padding: 8px;
+  width: 328px;
+  height: 328px;
   position: relative;
   touch-action: none;
   user-select: none;
@@ -427,17 +427,17 @@
   }
   
   .game-grid {
-    width: 280px;
-    height: 280px;
-    gap: 4px;
-    padding: 4px;
+    width: 288px;
+    height: 288px;
+    gap: 8px;
+    padding: 8px;
   }
   
   .tile {
     font-size: 1.6rem;
     border-radius: 4px;
-    width: 64px;
-    height: 64px;
+    width: 62px;
+    height: 62px;
   }
   
   .score-section {
@@ -506,20 +506,20 @@
 
 @media (max-width: 360px) {
   .game-grid {
-    width: 256px;
-    height: 256px;
-    gap: 4px;
-    padding: 4px;
+    width: 264px;
+    height: 264px;
+    gap: 8px;
+    padding: 8px;
   }
   
   .tile {
     font-size: 1.4rem;
-    width: 58px;
-    height: 58px;
+    width: 54px;
+    height: 54px;
   }
   
   .score-section, .game-controls, .game-info {
-    max-width: 256px;
+    max-width: 264px;
   }
 }
 
