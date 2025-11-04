@@ -83,16 +83,16 @@
 .game-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  gap: 10px;
   background: #bbada0;
-  border-radius: 12px;
-  padding: 12px;
-  width: 320px;
-  height: 320px;
+  border: 3px solid #bbada0;
+  border-radius: 8px;
+  padding: 10px;
+  width: 340px;
+  height: 340px;
   position: relative;
   touch-action: none;
   user-select: none;
-  min-height: 320px;
   box-sizing: border-box;
 }
 
@@ -102,10 +102,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: bold;
   color: #776e65;
-  min-height: 70px;
+  width: 70px;
+  height: 70px;
   transition: all 0.15s ease-in-out;
 }
 
@@ -426,17 +427,17 @@
   }
   
   .game-grid {
-    width: 280px;
-    height: 280px;
-    gap: 6px;
-    padding: 10px;
+    width: 300px;
+    height: 300px;
+    gap: 8px;
+    padding: 8px;
   }
   
   .tile {
     font-size: 1.6rem;
     border-radius: 4px;
-    width: 60px;
-    height: 60px;
+    width: 63px;
+    height: 63px;
   }
   
   .score-section {
@@ -505,16 +506,20 @@
 
 @media (max-width: 360px) {
   .game-grid {
-    width: 260px;
-    height: 260px;
+    width: 270px;
+    height: 270px;
+    gap: 7px;
+    padding: 7px;
   }
   
   .tile {
     font-size: 1.4rem;
+    width: 56px;
+    height: 56px;
   }
   
   .score-section, .game-controls, .game-info {
-    max-width: 260px;
+    max-width: 270px;
   }
 }
 
