@@ -198,14 +198,26 @@ const KenKenGame = ({ onBackToMenu }) => {
         onUserProfileClick={() => {}}
       />
 
-      <div className="kenken-content">
+      <div className="game-container">
         <KenKenToolbar state={state} actions={actions} />
         <KenKenBoard state={state} actions={actions} />
-        <div className="kenken-footer">
-          <div>Time: {elapsedSeconds}s</div>
-          <div>Hints: {hintsUsed}</div>
-          <div>Mistakes: {mistakes}</div>
-          <div>{state.notesMode ? 'Notes mode' : 'Value mode'}</div>
+        <div className="game-stats">
+          <div className="stat">
+            <span className="stat-label">Time</span>
+            <span className="stat-value">{elapsedSeconds}s</span>
+          </div>
+          <div className="stat">
+            <span className="stat-label">Hints</span>
+            <span className="stat-value">{hintsUsed}</span>
+          </div>
+          <div className="stat">
+            <span className="stat-label">Mistakes</span>
+            <span className="stat-value">{mistakes}</span>
+          </div>
+          <div className="stat">
+            <span className="stat-label">Mode</span>
+            <span className="stat-value">{state.notesMode ? 'Notes' : 'Values'}</span>
+          </div>
         </div>
       </div>
 
