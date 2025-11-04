@@ -331,61 +331,142 @@ After each guess, tiles change color to provide feedback:
 
 ---
 
-## KenKen Feature Specification (New Addition)
+## KenKen Feature Specification
 
-### Overview
+### Game Overview
 
-KenKen is a numeric logic puzzle played on an N×N grid where the goal is to fill the grid with digits 1..N so that:
+**KenKen®** (also known as "Calcudoku" or "MathDoku") is an arithmetic-based logic puzzle that combines elements of Sudoku with basic mathematical operations. Created by Japanese math teacher Tetsuya Miyamoto in 2004, KenKen means "wisdom squared" in Japanese.
 
-- Each row contains each number exactly once.
-- Each column contains each number exactly once.
-- Predefined "cages" (groups of cells) satisfy an arithmetic target using the given operator.
+**Core Concept**: Fill an N×N grid with numbers 1 through N such that:
+1. No number repeats in any row
+2. No number repeats in any column  
+3. Groups of cells ("cages") satisfy arithmetic constraints
 
-This feature adds a KenKen game mode to the existing puzzle hub alongside Word Guess and Sudoku variants. It will integrate with the shared UI, settings, and high scores while remaining behind a feature flag until finalized.
+**What Makes KenKen Special**:
+- Mathematical reasoning combined with logical deduction
+- Self-contained puzzles requiring no prior knowledge
+- Progressive difficulty from simple addition to complex operations
+- Suitable for ages 6+ (3×3) through adult enthusiasts (9×9+)
 
-### Goals
+### Target Experience
 
-- Deliver a polished, playable KenKen experience for N ∈ {4, 5, 6}. Larger sizes (7–9) are optional in later phases.
-- Support puzzle import from a JSON format and ship a small curated puzzle bank for each size and difficulty.
-- Provide core UX: pencil marks, undo/redo, keyboard input, mobile-friendly interactions, and optional validation.
-- Include an optional hint system (logical-first; fallback to solver-backed) and time-based scoring that integrates into High Scores.
+**Primary Audience**:
+- Logic puzzle enthusiasts seeking variety beyond Sudoku
+- Math educators and students (K-12 through adult)
+- Mobile puzzle gamers looking for quick 5-15 minute sessions
+- Crossword and number puzzle veterans
 
-### Non-Goals (for MVP)
+**Session Goals**:
+- 3×3/4×4: 2-5 minutes (quick coffee break)
+- 5×5/6×6: 5-12 minutes (commute-friendly)
+- Sense of accomplishment through pure logic
+- No guessing required—every puzzle has one unique solution
 
-- Procedural KenKen generator (will be a Phase 2+ objective).
-- Multiplayer or daily server-rotated puzzles.
-- Advanced teaching mode with step-by-step logic explanations beyond basic hints.
+**Platform Priority**: Mobile-first with desktop support (touchscreen-optimized)
 
-### Rules
+### Game Rules
 
-- Grid: N×N; allowed digits are $\{1, \\dots, N\}$.
-- Row/Column constraints: For every row r and column c, the set of filled digits equals $\{1, \\dots, N\}$ with no repeats.
-- Cages: Each cage has cells, a target, and an operator among {+, −, ×, ÷}. The cage digits must combine to equal the target.
-   - Single-cell cage: operator omitted; the target is the cell's fixed value.
-   - For MVP: subtraction (−) and division (÷) cages are 2-cell only; addition and multiplication can span 2+ cells.
-   - Operations are exact with integers; for ÷ cages, the larger divided by the smaller must equal the target with no remainder.
+**Grid Constraints** (identical to Sudoku):
+- Fill an N×N grid with numbers 1 through N
+- Each row must contain 1-N exactly once (no duplicates)
+- Each column must contain 1-N exactly once (no duplicates)
+- Unlike Sudoku: **no boxes/regions**—only rows and columns matter
 
-### Difficulty and Sizes
+**Cage Rules** (the unique KenKen element):
+- Grid is divided into outlined groups called "cages" (typically 1-4 cells)
+- Each cage displays a **target number** and **operation** (+, −, ×, ÷) in its top-left corner
+- Numbers in a cage must combine via that operation to equal the target
+- **Single-cell cages**: Show only the target number (that cell's fixed value)
+- **Operation Order**: 
+  - **Addition (+)**: Sum all numbers in the cage
+  - **Multiplication (×)**: Multiply all numbers in the cage
+  - **Subtraction (−)**: Only 2-cell cages; either order equals target (e.g., 3− can be 4,1 or 5,2)
+  - **Division (÷)**: Only 2-cell cages; larger ÷ smaller = target (e.g., 2÷ can be 6,3 or 4,2)
 
-- Sizes: 4×4 (Easy), 5×5 (Easy/Medium), 6×6 (Medium/Hard). Optional: 7×7+ in later phases.
-- Difficulty knobs:
-   - Number of multi-cell cages and their shapes (L/T/irregular shapes increase difficulty).
-   - Operator mix: more × and complex + cages increase difficulty; use of −/÷ requires reasoning but remains 2-cell.
-   - Given singletons (fixed cells) count.
-   - Logical depth required before a forced move appears.
+**Valid Puzzle Requirements**:
+- Exactly one unique solution achievable through pure logic
+- No guessing required at any step
+- All cages solvable using basic arithmetic (no calculators needed)
 
-### User Experience
+### Size & Difficulty System
 
-- Grid UI with distinct cage outlines; each cage shows its target and operator in the top-left of the cage's anchor cell.
-- Input methods: mouse/touch to select cell; number keys 1..N for entry; long-press or toggle for pencil marks.
-- Pencil marks: per-cell candidate notes; quick-toggles via keyboard (e.g., Alt/Option or a Notes mode).
-- Controls: Undo/Redo, Clear Cell, Toggle Validation (off by default), Hint, Check, New Puzzle, Difficulty/Size selector.
-- Visual feedback:
-   - Optional live conflict highlighting for row/column duplicates and cage violations.
-   - Subtle animations for valid placements and error pings for invalid ones (when validation is on).
-- Responsive layout with larger hit targets on mobile; support system dark mode.
+**Grid Sizes** (MVP Launch):
+| Size | Typical Time | Target Skill Level | Operators Used |
+|------|--------------|-------------------|----------------|
+| 3×3 | 2-4 min | Beginner/Kids (Age 6+) | + only |
+| 4×4 | 3-7 min | Easy/Learning | +, −, × |
+| 5×5 | 6-12 min | Medium | +, −, ×, ÷ |
+| 6×6 | 10-20 min | Hard/Expert | +, −, ×, ÷ |
 
-### Integration Points
+**Difficulty Factors**:
+1. **Cage complexity**: Larger cages (3-4 cells) harder than pairs
+2. **Operator mix**: Division requires more trial-and-error than addition
+3. **Cage shapes**: L-shapes and scattered cages increase difficulty
+4. **Singleton givens**: Fewer fixed numbers = harder
+5. **Initial deductions**: Easy puzzles have obvious first moves
+
+**Phase 2 Sizes** (Future):
+- 7×7, 8×8, 9×9 for advanced players (20-45 minutes)
+
+### User Interface Design
+
+**Visual Hierarchy** (inspired by NYT Games and Conceptis):
+```
+┌─────────────────────────────────────┐
+│  ← KENKEN 4×4         [Stats] [⋮]   │
+├─────────────────────────────────────┤
+│  Time: 04:32     Hints: 0           │
+│  [Undo] [Redo] [Hint] [Check]       │
+├─────────────────────────────────────┤
+│                                     │
+│  ┌─────┬─────┬─────┬─────┐         │
+│  │6+   │     │3−   │     │         │
+│  │  1  │  2  ├─────┤  4  │         │
+│  ├─────┼─────┤ 4×  │     │         │
+│  │2−   │     │     │     │         │
+│  │  3  │  4  │  2  │  1  │         │
+│  ├─────┴─────┼─────┼─────┤         │
+│  │  4   │ 1  │12+  │     │         │
+│  │      │    │     │  2  │         │
+│  ├──────┼────┼─────┴─────┤         │
+│  │      │ 3  │    5+     │         │
+│  │   2  │    │           │         │
+│  └──────┴────┴───────────┘         │
+│                                     │
+│  1   2   3   4   [Clear] [Notes]   │
+└─────────────────────────────────────┘
+```
+
+**Grid Display Requirements**:
+1. **Cage Boundaries**:
+   - **3px bold borders** separate cages (using `var(--color-border)`)
+   - **1px thin borders** for internal cell divisions
+   - Rounded corners (8px) on outer grid
+2. **Cage Labels**:
+   - Position: **Top-left corner** of first cell in reading order
+   - Format: `"12+"`, `"3−"`, `"8×"`, `"2÷"` or just `"5"` for singletons
+   - Font: **Bold, 0.75-0.85rem**, `var(--color-text)`
+   - Must not overlap with user input
+
+3. **Cell Sizing**:
+   - Desktop: 60px × 60px; Mobile: 50px × 50px; Tablet: 55px × 55px
+   - Value font: 1.5rem bold; Pencil marks: 0.65rem in 3×3 grid
+
+4. **States & Colors**:
+   - Empty: `var(--color-background)`
+   - Selected: `var(--color-correct)` + white text + scale(1.05)
+   - Hover: `var(--color-key-hover)`
+   - Error: `var(--color-tile-absent)` + shake animation
+
+**Input Methods**:
+- **Number Entry**: Tap cell → tap number button or press 1-N key
+- **Pencil Marks**: Toggle "Notes" button; shows 3×3 grid of candidates
+- **Keyboard**: 1-N (enter), Delete (clear), N (notes), H (hint), Ctrl+Z (undo), arrows (navigate)
+
+**Controls**:
+```
+[Undo] [Redo]  |  [Hint]  |  [Check]  |  [New] [Size▾]
+```### Integration Points
 
 - Feature flag: `SHOW_KENKEN` (default false until release). Used in:
    - `src/shared/components/GameSelector` to show/hide the KenKen card.
