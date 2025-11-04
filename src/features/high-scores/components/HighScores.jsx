@@ -5,6 +5,7 @@ import '../styles/HighScores.css';
 const HighScores = ({ gameType, onClose }) => {
   // Feature flags
   const SHOW_SAMURAI = false; // hide Samurai scores UI
+  const SHOW_KENKEN = false; // hide KenKen tab until ready
 
   const defaultTab = (!SHOW_SAMURAI && gameType === 'samurai-sudoku') ? 'sudoku' : (gameType || 'sudoku');
   const [activeGameTab, setActiveGameTab] = useState(defaultTab);
@@ -45,6 +46,11 @@ const HighScores = ({ gameType, onClose }) => {
         setEasyScores(easy);
         setMediumScores(medium);
         setHardScores(hard);
+      } else if (SHOW_KENKEN && activeGameTab === 'kenken') {
+        // For KenKen, show overall list without difficulty sub-tabs (time-based)
+        setEasyScores(allScores.slice(0, 10));
+        setMediumScores([]);
+        setHardScores([]);
       } else {
         // For other games, just show all scores (they'll be grouped differently)
         setEasyScores(allScores.slice(0, 10));
@@ -106,6 +112,12 @@ const HighScores = ({ gameType, onClose }) => {
           meta: `${score.difficulty} • Score: ${score.finalScore} • Hints: ${score.hintsUsed} • Mistakes: ${score.mistakes}`,
           sortValue: score.timeSeconds
         };
+      case 'kenken':
+        return {
+          primaryValue: formatTime(score.time_seconds || score.timeSeconds),
+          meta: `${score.difficulty || 'Standard'} • ${score.grid_size || score.gridSize}${(score.hints_used || score.hintsUsed) ? ` • ${score.hints_used || score.hintsUsed} hints` : ''}${score.mistakes ? ` • ${score.mistakes} mistakes` : ''}`,
+          sortValue: score.time_seconds || score.timeSeconds
+        };
       case 'wordle':
         return {
           primaryValue: `${score.attempts}/${score.maxAttempts} attempts`,
@@ -137,6 +149,7 @@ const HighScores = ({ gameType, onClose }) => {
     const gameNames = {
       'sudoku': 'Sudoku',
   'samurai-sudoku': 'Samurai Sudoku',
+      'kenken': 'KenKen',
       'wordle': 'Wordle',
       '2048': '2048',
       'spelling-bee': 'Spelling Bee'
@@ -317,6 +330,14 @@ const HighScores = ({ gameType, onClose }) => {
           >
             🧩 Sudoku
           </button>
+          {SHOW_KENKEN && (
+            <button 
+              className={`tab ${activeGameTab === 'kenken' ? 'active' : ''}`}
+              onClick={() => setActiveGameTab('kenken')}
+            >
+              🧮 KenKen
+            </button>
+          )}
           {SHOW_SAMURAI && (
             <button 
               className={`tab ${activeGameTab === 'samurai-sudoku' ? 'active' : ''}`}

@@ -4,6 +4,7 @@ import { SpellingBeeProvider } from './features/spelling-bee/context/SpellingBee
 import { SudokuProvider } from './features/sudoku/context/SudokuContext';
 import { SamuraiSudokuProvider } from './features/samurai-sudoku/context/SamuraiSudokuContext';
 import { Game2048Provider } from './features/game2048/context/Game2048Context';
+import KenKenGame from './features/kenken/components/KenKenGame';
 import { getUserDisplayName, getUserProfile } from './shared/utils/userProfile.js';
 import GameSelector from './shared/components/GameSelector';
 import SpellingBeeGame from './features/spelling-bee/components/SpellingBeeGame';
@@ -22,6 +23,7 @@ import './styles/App.css';
 
 // Feature flags
 const SHOW_SAMURAI = false; // gate Samurai Sudoku feature app-wide
+const SHOW_KENKEN = false; // gate KenKen feature app-wide
 
 const GameContent = ({ onBackToMenu }) => {
   const {
@@ -256,6 +258,23 @@ const App = () => {
       return (
         <div style={{ padding: '20px', textAlign: 'center' }}>
           <h2>Error loading Samurai Sudoku</h2>
+          <p>Error: {error.message}</p>
+          <button onClick={handleBackToMenu}>Back to Games</button>
+        </div>
+      );
+    }
+  }
+  
+  if (selectedGame === 'kenken' && SHOW_KENKEN) {
+    try {
+      return (
+        <KenKenGame onBackToMenu={handleBackToMenu} />
+      );
+    } catch (error) {
+      console.error('Error loading KenKen:', error);
+      return (
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <h2>Error loading KenKen</h2>
           <p>Error: {error.message}</p>
           <button onClick={handleBackToMenu}>Back to Games</button>
         </div>

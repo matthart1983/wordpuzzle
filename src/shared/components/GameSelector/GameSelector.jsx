@@ -3,6 +3,7 @@ import './GameSelector.css';
 
 // Feature flags
 const SHOW_SAMURAI = false; // temporarily hide Samurai Sudoku from the main page
+const SHOW_KENKEN = false; // gate KenKen until ready
 
 const baseGames = [
   {
@@ -44,6 +45,15 @@ const games = (() => {
       description: 'Master the 5-grid Sudoku challenge',
       icon: '⚔️',
       color: '#9c27b0'
+    });
+  }
+  if (SHOW_KENKEN) {
+    list.splice(3, 0, {
+      id: 'kenken',
+      title: 'KenKen',
+      description: 'Solve arithmetic cages on an N×N grid',
+      icon: '🧮',
+      color: '#00bfa5'
     });
   }
   return list;

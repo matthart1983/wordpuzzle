@@ -328,3 +328,235 @@ After each guess, tiles change color to provide feedback:
 | Firefox | ✓       | ✓      | ✓      |
 | Safari  | ✓       | ✓      | ✓      |
 | Edge    | ✓       | ✓      | ✓      |
+
+---
+
+## KenKen Feature Specification (New Addition)
+
+### Overview
+
+KenKen is a numeric logic puzzle played on an N×N grid where the goal is to fill the grid with digits 1..N so that:
+
+- Each row contains each number exactly once.
+- Each column contains each number exactly once.
+- Predefined "cages" (groups of cells) satisfy an arithmetic target using the given operator.
+
+This feature adds a KenKen game mode to the existing puzzle hub alongside Word Guess and Sudoku variants. It will integrate with the shared UI, settings, and high scores while remaining behind a feature flag until finalized.
+
+### Goals
+
+- Deliver a polished, playable KenKen experience for N ∈ {4, 5, 6}. Larger sizes (7–9) are optional in later phases.
+- Support puzzle import from a JSON format and ship a small curated puzzle bank for each size and difficulty.
+- Provide core UX: pencil marks, undo/redo, keyboard input, mobile-friendly interactions, and optional validation.
+- Include an optional hint system (logical-first; fallback to solver-backed) and time-based scoring that integrates into High Scores.
+
+### Non-Goals (for MVP)
+
+- Procedural KenKen generator (will be a Phase 2+ objective).
+- Multiplayer or daily server-rotated puzzles.
+- Advanced teaching mode with step-by-step logic explanations beyond basic hints.
+
+### Rules
+
+- Grid: N×N; allowed digits are $\{1, \\dots, N\}$.
+- Row/Column constraints: For every row r and column c, the set of filled digits equals $\{1, \\dots, N\}$ with no repeats.
+- Cages: Each cage has cells, a target, and an operator among {+, −, ×, ÷}. The cage digits must combine to equal the target.
+   - Single-cell cage: operator omitted; the target is the cell's fixed value.
+   - For MVP: subtraction (−) and division (÷) cages are 2-cell only; addition and multiplication can span 2+ cells.
+   - Operations are exact with integers; for ÷ cages, the larger divided by the smaller must equal the target with no remainder.
+
+### Difficulty and Sizes
+
+- Sizes: 4×4 (Easy), 5×5 (Easy/Medium), 6×6 (Medium/Hard). Optional: 7×7+ in later phases.
+- Difficulty knobs:
+   - Number of multi-cell cages and their shapes (L/T/irregular shapes increase difficulty).
+   - Operator mix: more × and complex + cages increase difficulty; use of −/÷ requires reasoning but remains 2-cell.
+   - Given singletons (fixed cells) count.
+   - Logical depth required before a forced move appears.
+
+### User Experience
+
+- Grid UI with distinct cage outlines; each cage shows its target and operator in the top-left of the cage's anchor cell.
+- Input methods: mouse/touch to select cell; number keys 1..N for entry; long-press or toggle for pencil marks.
+- Pencil marks: per-cell candidate notes; quick-toggles via keyboard (e.g., Alt/Option or a Notes mode).
+- Controls: Undo/Redo, Clear Cell, Toggle Validation (off by default), Hint, Check, New Puzzle, Difficulty/Size selector.
+- Visual feedback:
+   - Optional live conflict highlighting for row/column duplicates and cage violations.
+   - Subtle animations for valid placements and error pings for invalid ones (when validation is on).
+- Responsive layout with larger hit targets on mobile; support system dark mode.
+
+### Integration Points
+
+- Feature flag: `SHOW_KENKEN` (default false until release). Used in:
+   - `src/shared/components/GameSelector` to show/hide the KenKen card.
+   - `src/App` route registration (e.g., `/kenken`).
+   - `src/features/high-scores` to hide or show KenKen tabs and data.
+- High Scores: Track best time per size and difficulty, with penalties for hint usage.
+- Persistence: Save in-progress puzzle state, notes, and timer in `localStorage` under a namespaced key.
+
+### Data Model
+
+Puzzle JSON (importable and shippable) format:
+
+```json
+{
+   "id": "kenken-6x6-easy-001",
+   "size": 6,
+   "title": "6x6 Easy #1",
+   "cages": [
+      { "cells": [[0,0],[0,1]], "op": "+", "target": 7 },
+      { "cells": [[0,2],[1,2]], "op": "÷", "target": 2 },
+      { "cells": [[0,3],[0,4],[1,4]], "op": "×", "target": 24 },
+      { "cells": [[0,5]], "target": 5 },
+      { "cells": [[1,0],[2,0]], "op": "-", "target": 1 }
+      // ...
+   ],
+   "givens": [
+      // Optional fixed cells, rarely used in standard KenKen
+      // { "r": 5, "c": 5, "value": 3 }
+   ],
+   "metadata": { "difficulty": "easy", "author": "", "source": "built-in" }
+}
+```
+
+Notes:
+- Coordinates are zero-based `[row, col]`.
+- `op` omitted for singletons; `target` is required for all cages.
+- MVP restricts `op` in cages with 3+ cells to `+` or `×`.
+
+### Architecture
+
+Proposed folder structure:
+
+```
+src/
+   features/
+      kenken/
+         components/
+            KenKenBoard.tsx
+            KenKenCell.tsx
+            KenKenToolbar.tsx
+         hooks/
+            useKenKenGame.ts
+         utils/
+            kenkenValidator.ts
+            kenkenSolver.ts
+            kenkenHint.ts
+            kenkenParsers.ts
+         data/
+            bank-4x4.json
+            bank-5x5.json
+            bank-6x6.json
+         index.ts
+```
+
+Key modules:
+- `kenkenValidator.ts`: Pure functions to validate row/column uniqueness and cage satisfaction.
+- `kenkenSolver.ts`: Backtracking solver with constraint propagation (row/col candidates, cage domain pruning).
+- `kenkenHint.ts`: Logic-first hints (singles, cage forced sums/products, unique candidate in row/col) with solver fallback.
+- `kenkenParsers.ts`: Parse/validate puzzle JSON, generate internal types.
+- `useKenKenGame.ts`: State machine, timer, undo/redo stack, persistence.
+
+### Algorithms and Logic
+
+Constraint propagation primitives:
+- Row/Column elimination: if a digit d exists in row r, remove d from other candidates in r; similarly for columns.
+- Cage pruning:
+   - `+` cages: candidate combos of k cells from $\{1..N\}$ whose sum = target, respecting row/col uniqueness.
+   - `×` cages: candidate combos whose product = target.
+   - `-`/`÷` cages (2-cell): enforce absolute difference = target or quotient = target (integer division, larger ÷ smaller).
+- Singles:
+   - Naked single: a cell has exactly one candidate.
+   - Hidden single: only one cell in a row/column/cage can take digit d.
+
+Solver:
+- Depth-first backtracking using MRV heuristic (choose cell with minimum remaining candidates) and forward-checking via the above pruning.
+- Early failure on cage impossibility or row/column duplication.
+- Determinism: Ensure a unique solution for all shipped puzzles; solver verifies uniqueness during import/build time (Phase 2).
+
+### Hint System
+
+Hint tiers (first applicable is used):
+1. Explain a naked single (cell X must be Y).
+2. Explain a hidden single in a row/column/cage.
+3. Explain a cage-specific deduction (e.g., only {1,6} fit a 7+ in two cells, and 6 is blocked in row, so 1 must go here).
+4. Gentle solver step: pick a cell with smallest domain and suggest the most constrained value, marking as a "solver hint" that adds a time penalty.
+
+Each hint increments a counter and adds a configurable time penalty (e.g., +20 seconds for tiers 1–3, +40 seconds for tier 4).
+
+### Scoring and Persistence
+
+- Timer starts on first input; pauses when the window/tab is hidden.
+- Score = completion time + hint penalties.
+- Save schema (per active puzzle key):
+
+```json
+{
+   "puzzleId": "kenken-6x6-easy-001",
+   "size": 6,
+   "grid": [[0,0,0,0,0,0], ...],
+   "notes": { "r,c": [1,3,5] },
+   "elapsedMs": 123456,
+   "hintsUsed": 2,
+   "validationOn": false,
+   "lastUpdated": "2025-11-05T12:34:56.000Z"
+}
+```
+
+### Accessibility
+
+- Full keyboard support: arrow keys to move, 1..N to enter, 0/Backspace to clear, Shift for notes mode.
+- ARIA labels for cells: announce row/col, current value, candidates, and cage info.
+- High-contrast mode and large touch targets on mobile.
+
+### Acceptance Criteria (MVP)
+
+- Users can select KenKen from the game selector when `SHOW_KENKEN` is true and start a 4×4, 5×5, or 6×6 puzzle.
+- Grid renders with cage outlines and targets; input via keyboard and touch works on desktop and mobile.
+- Validation correctly detects row/column duplicates and cage violations.
+- Puzzles from built-in banks load; progress persists across reloads.
+- Undo/Redo works for at least 100 steps; Clear Cell and Clear Notes work.
+- Hint button provides at least tiers 1–2; tier 4 fallback is acceptable if tiers 1–3 aren’t applicable.
+- Completion screen shows time, hints used, and allows saving to High Scores.
+
+### Milestones
+
+1. Skeleton and UI (3–4 days)
+    - Feature flag and route wiring, basic board/cage rendering, input, persistence stub.
+2. Validation and basic logic (3–4 days)
+    - Row/column uniqueness, cage validation, pencil marks, undo/redo.
+3. Puzzle banks and loading (2–3 days)
+    - Curate/import 10 puzzles per size×difficulty; verify with solver.
+4. Hint tiers 1–2 and scoring (2–3 days)
+    - Implement hints and integrate High Scores.
+5. Polish pass (2–3 days)
+    - Accessibility, animations, mobile tuning, QA.
+
+Optional Phase 2
+- Procedural generator, advanced hints, larger sizes, and daily rotation.
+
+### Risks and Mitigations
+
+- Generator complexity: Defer to Phase 2; rely on curated banks first.
+- Solver performance on 6×6 hard: Use MRV + forward-checking; memoize cage candidate sets.
+- Cage UI density on small screens: Use zoom or condensed label rendering; allow tap to expand cage info.
+- JSON integrity: Validate against schema on import; add runtime guards in `kenkenParsers.ts`.
+
+### JSON Schema (informal)
+
+```ts
+type Cell = [number, number];
+type Cage = { cells: Cell[]; target: number; op?: "+" | "-" | "×" | "÷" };
+type KenKenPuzzle = {
+   id: string;
+   size: number; // 4..9
+   title?: string;
+   cages: Cage[];
+   givens?: { r: number; c: number; value: number }[];
+   metadata?: { difficulty?: "easy" | "medium" | "hard"; author?: string; source?: string };
+};
+```
+
+---
+
+Implementation note: Start with `SHOW_KENKEN = false` and land UI + validation behind the flag. Once puzzle banks and hints tiers 1–2 are stable, flip the flag to ship.
