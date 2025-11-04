@@ -1,0 +1,44 @@
+{
+  "puzzles": [
+    {
+      "id": "kenken-3x3-easy-001",
+      "size": 3,
+      "title": "3x3 Easy #1",
+      "cages": [
+        { "cells": [[0,0]], "target": 1 },
+        { "cells": [[0,1],[0,2]], "op": "+", "target": 5 },
+        { "cells": [[1,0],[2,0]], "op": "+", "target": 5 },
+        { "cells": [[1,1]], "target": 1 },
+        { "cells": [[1,2],[2,2]], "op": "+", "target": 3 },
+        { "cells": [[2,1]], "target": 3 }
+      ],
+      "metadata": { "difficulty": "easy", "author": "auto", "source": "built-in" }
+    },
+    {
+      "id": "kenken-3x3-easy-002",
+      "size": 3,
+      "title": "3x3 Easy #2",
+      "cages": [
+        { "cells": [[0,0],[1,0]], "op": "+", "target": 3 },
+        { "cells": [[0,1],[0,2]], "op": "+", "target": 4 },
+        { "cells": [[1,1]], "target": 2 },
+        { "cells": [[1,2],[2,2]], "op": "+", "target": 5 },
+        { "cells": [[2,0],[2,1]], "op": "+", "target": 4 }
+      ],
+      "metadata": { "difficulty": "easy", "author": "auto", "source": "built-in" }
+    },
+    {
+      "id": "kenken-3x3-easy-003",
+      "size": 3,
+      "title": "3x3 Easy #3",
+      "cages": [
+        { "cells": [[0,0]], "target": 3 },
+        { "cells": [[0,1],[1,1]], "op": "+", "target": 5 },
+        { "cells": [[0,2],[1,2]], "op": "+", "target": 3 },
+        { "cells": [[1,0],[2,0]], "op": "+", "target": 3 },
+        { "cells": [[2,1],[2,2]], "op": "+", "target": 4 }
+      ],
+      "metadata": { "difficulty": "easy", "author": "auto", "source": "built-in" }
+    }
+  ]
+}

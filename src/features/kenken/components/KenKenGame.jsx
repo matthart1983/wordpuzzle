@@ -108,7 +108,7 @@ const KenKenToolbar = ({ state, actions }) => {
         <label>
           Size:
           <select value={size} onChange={(e) => setSize(parseInt(e.target.value, 10))}>
-            {[4,5,6].map(s => <option key={s} value={s}>{s}×{s}</option>)}
+            {[3,4,5,6].map(s => <option key={s} value={s}>{s}×{s}</option>)}
           </select>
         </label>
       </div>
