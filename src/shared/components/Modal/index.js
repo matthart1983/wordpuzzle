@@ -1,0 +1,1 @@
+export { StatisticsModal, SettingsModal, default as Modal } from './Modal';
