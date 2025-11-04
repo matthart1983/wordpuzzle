@@ -164,6 +164,7 @@ const KenKenGame = ({ onBackToMenu }) => {
 
   const [showHighScores, setShowHighScores] = useState(false);
   const [showWinModal, setShowWinModal] = useState(false);
+  const [hasShownWinModal, setHasShownWinModal] = useState(false);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -187,7 +188,7 @@ const KenKenGame = ({ onBackToMenu }) => {
   }, [actions]);
 
   useEffect(() => {
-    if (isSolved && !showWinModal) {
+    if (isSolved && !hasShownWinModal) {
       // Save high score
       saveHighScore({
         gameType: 'kenken',
@@ -201,8 +202,9 @@ const KenKenGame = ({ onBackToMenu }) => {
       });
       // Show win modal
       setShowWinModal(true);
+      setHasShownWinModal(true);
     }
-  }, [isSolved, showWinModal, state.difficultyLabel, state.size, elapsedSeconds, hintsUsed, mistakes]);
+  }, [isSolved, hasShownWinModal, state.difficultyLabel, state.size, elapsedSeconds, hintsUsed, mistakes]);
 
   const headerTitle = useMemo(() => `KENKEN ${state.size}×${state.size}` , [state.size]);
 
@@ -213,7 +215,11 @@ const KenKenGame = ({ onBackToMenu }) => {
         showBackButton
         onBackClick={onBackToMenu}
         showResetButton
-        onResetClick={() => { actions.newPuzzle(); resetTimer(); }}
+        onResetClick={() => { 
+          actions.newPuzzle(); 
+          resetTimer(); 
+          setHasShownWinModal(false);
+        }}
         showHighScores
         onHighScoresClick={() => setShowHighScores(true)}
         onSettingsClick={() => {}}
@@ -249,8 +255,8 @@ const KenKenGame = ({ onBackToMenu }) => {
 
       {/* Win Modal */}
       {showWinModal && (
-        <div className="modal-overlay">
-          <div className="modal win-modal">
+        <div className="modal-overlay" onClick={() => setShowWinModal(false)}>
+          <div className="modal win-modal" onClick={(e) => e.stopPropagation()}>
             <h2>🎉 Congratulations!</h2>
             <p>You solved the {state.size}×{state.size} KenKen puzzle!</p>
             <div className="modal-stats">
@@ -260,14 +266,24 @@ const KenKenGame = ({ onBackToMenu }) => {
               <p><strong>Mistakes:</strong> {mistakes}</p>
             </div>
             <div className="modal-buttons">
-              <button className="modal-btn primary" onClick={() => {
-                actions.newPuzzle();
-                resetTimer();
-                setShowWinModal(false);
-              }}>
+              <button 
+                className="modal-btn primary" 
+                onClick={() => {
+                  actions.newPuzzle();
+                  resetTimer();
+                  setShowWinModal(false);
+                  setHasShownWinModal(false);
+                }}
+              >
                 New Puzzle
               </button>
-              <button className="modal-btn secondary" onClick={() => setShowWinModal(false)}>
+              <button 
+                className="modal-btn secondary" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowWinModal(false);
+                }}
+              >
                 Close
               </button>
             </div>
