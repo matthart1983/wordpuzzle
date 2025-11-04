@@ -140,6 +140,8 @@ const SamuraiGrid = () => {
       classes.push('error');
     } else if (cell.state === 'user') {
       classes.push('user-input');
+    } else if (cell.state === 'hint') {
+      classes.push('hint-input');
     }
     
     // Selection and highlighting

@@ -167,6 +167,7 @@ export const CELL_STATES = {
   EMPTY: null,
   GIVEN: 'given',      // Pre-filled cell from puzzle
   USER: 'user',        // User-entered value
+  HINT: 'hint',        // Value filled by hint system
   ERROR: 'error',      // Invalid user entry
   HIGHLIGHT: 'highlight' // Currently selected or related
 };

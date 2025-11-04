@@ -3,7 +3,11 @@ import { getHighScores, getGameStats, getLeaderboard } from '../utils/highScores
 import '../styles/HighScores.css';
 
 const HighScores = ({ gameType, onClose }) => {
-  const [activeGameTab, setActiveGameTab] = useState(gameType || 'sudoku');
+  // Feature flags
+  const SHOW_SAMURAI = false; // hide Samurai scores UI
+
+  const defaultTab = (!SHOW_SAMURAI && gameType === 'samurai-sudoku') ? 'sudoku' : (gameType || 'sudoku');
+  const [activeGameTab, setActiveGameTab] = useState(defaultTab);
   const [activeDifficultyTab, setActiveDifficultyTab] = useState('easy');
   const [currentGameScores, setCurrentGameScores] = useState([]);
   const [easyScores, setEasyScores] = useState([]);
@@ -32,7 +36,7 @@ const HighScores = ({ gameType, onClose }) => {
         setEasyScores(easy);
         setMediumScores(medium);
         setHardScores(hard);
-      } else if (activeGameTab === 'samurai-sudoku') {
+      } else if (SHOW_SAMURAI && activeGameTab === 'samurai-sudoku') {
         // Group Samurai Sudoku scores by difficulty
         const easy = allScores.filter(score => score.difficulty === 'Easy').slice(0, 10);
         const medium = allScores.filter(score => score.difficulty === 'Medium').slice(0, 10);
@@ -132,7 +136,7 @@ const HighScores = ({ gameType, onClose }) => {
   const getGameDisplayName = (gameType) => {
     const gameNames = {
       'sudoku': 'Sudoku',
-      'samurai-sudoku': 'Samurai Sudoku',
+  'samurai-sudoku': 'Samurai Sudoku',
       'wordle': 'Wordle',
       '2048': '2048',
       'spelling-bee': 'Spelling Bee'
@@ -313,12 +317,14 @@ const HighScores = ({ gameType, onClose }) => {
           >
             🧩 Sudoku
           </button>
-          <button 
-            className={`tab ${activeGameTab === 'samurai-sudoku' ? 'active' : ''}`}
-            onClick={() => setActiveGameTab('samurai-sudoku')}
-          >
-            ⚔️ Samurai Sudoku
-          </button>
+          {SHOW_SAMURAI && (
+            <button 
+              className={`tab ${activeGameTab === 'samurai-sudoku' ? 'active' : ''}`}
+              onClick={() => setActiveGameTab('samurai-sudoku')}
+            >
+              ⚔️ Samurai Sudoku
+            </button>
+          )}
           <button 
             className={`tab ${activeGameTab === 'wordle' ? 'active' : ''}`}
             onClick={() => setActiveGameTab('wordle')}
@@ -340,7 +346,7 @@ const HighScores = ({ gameType, onClose }) => {
         </div>
 
         {/* Difficulty Tabs (only for Sudoku games) */}
-        {(activeGameTab === 'sudoku' || activeGameTab === 'samurai-sudoku') && (
+        {(activeGameTab === 'sudoku' || (SHOW_SAMURAI && activeGameTab === 'samurai-sudoku')) && (
           <div className="tabs difficulty-tabs">
             <button 
               className={`tab ${activeDifficultyTab === 'easy' ? 'active' : ''}`}
@@ -374,10 +380,10 @@ const HighScores = ({ gameType, onClose }) => {
           {activeGameTab === 'sudoku' && activeDifficultyTab === 'medium' && renderDifficultyScores(mediumScores, 'Medium')}
           {activeGameTab === 'sudoku' && activeDifficultyTab === 'hard' && renderDifficultyScores(hardScores, 'Hard')}
           {activeGameTab === 'sudoku' && activeDifficultyTab === 'stats' && renderGameStats()}
-          {activeGameTab === 'samurai-sudoku' && activeDifficultyTab === 'easy' && renderDifficultyScores(easyScores, 'Easy')}
-          {activeGameTab === 'samurai-sudoku' && activeDifficultyTab === 'medium' && renderDifficultyScores(mediumScores, 'Medium')}
-          {activeGameTab === 'samurai-sudoku' && activeDifficultyTab === 'hard' && renderDifficultyScores(hardScores, 'Hard')}
-          {activeGameTab === 'samurai-sudoku' && activeDifficultyTab === 'stats' && renderGameStats()}
+          {SHOW_SAMURAI && activeGameTab === 'samurai-sudoku' && activeDifficultyTab === 'easy' && renderDifficultyScores(easyScores, 'Easy')}
+          {SHOW_SAMURAI && activeGameTab === 'samurai-sudoku' && activeDifficultyTab === 'medium' && renderDifficultyScores(mediumScores, 'Medium')}
+          {SHOW_SAMURAI && activeGameTab === 'samurai-sudoku' && activeDifficultyTab === 'hard' && renderDifficultyScores(hardScores, 'Hard')}
+          {SHOW_SAMURAI && activeGameTab === 'samurai-sudoku' && activeDifficultyTab === 'stats' && renderGameStats()}
           {activeGameTab !== 'sudoku' && activeGameTab !== 'samurai-sudoku' && renderCurrentGameScores()}
         </div>
       </div>

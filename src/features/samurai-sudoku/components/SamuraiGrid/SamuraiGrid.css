@@ -124,6 +124,12 @@
   background: var(--bg-primary, #ffffff);
 }
 
+.samurai-cell.hint-input {
+  color: var(--hint-text, #ff9800);
+  background: var(--hint-bg, #fff3e0);
+  font-weight: 600;
+}
+
 .samurai-cell.invalid {
   background: var(--error-bg, #ffebee);
   color: var(--error-text, #d32f2f);

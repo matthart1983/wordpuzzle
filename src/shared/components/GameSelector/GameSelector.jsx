@@ -1,7 +1,10 @@
 import React, { useCallback } from 'react';
 import './GameSelector.css';
 
-const games = [
+// Feature flags
+const SHOW_SAMURAI = false; // temporarily hide Samurai Sudoku from the main page
+
+const baseGames = [
   {
     id: 'wordguess',
     title: 'Word Guess',
@@ -24,13 +27,6 @@ const games = [
     color: '#4a90e2'
   },
   {
-    id: 'samurai-sudoku',
-    title: 'Samurai Sudoku',
-    description: 'Master the 5-grid Sudoku challenge',
-    icon: '⚔️',
-    color: '#9c27b0'
-  },
-  {
     id: '2048',
     title: '2048',
     description: 'Combine tiles to reach 2048',
@@ -38,6 +34,20 @@ const games = [
     color: '#ed4c67'
   }
 ];
+
+const games = (() => {
+  const list = [...baseGames];
+  if (SHOW_SAMURAI) {
+    list.splice(3, 0, {
+      id: 'samurai-sudoku',
+      title: 'Samurai Sudoku',
+      description: 'Master the 5-grid Sudoku challenge',
+      icon: '⚔️',
+      color: '#9c27b0'
+    });
+  }
+  return list;
+})();
 
 const GameSelector = ({ onSelectGame }) => {
   const handleGameSelect = useCallback((gameId) => {

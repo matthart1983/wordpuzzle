@@ -20,6 +20,9 @@ import { StatisticsModal, SettingsModal } from './shared/components/Modal';
 import { GAME_STATES } from './features/wordle/utils/gameLogic';
 import './styles/App.css';
 
+// Feature flags
+const SHOW_SAMURAI = false; // gate Samurai Sudoku feature app-wide
+
 const GameContent = ({ onBackToMenu }) => {
   const {
     guesses,
@@ -243,7 +246,7 @@ const App = () => {
     }
   }
 
-  if (selectedGame === 'samurai-sudoku') {
+  if (selectedGame === 'samurai-sudoku' && SHOW_SAMURAI) {
     try {
       return (
         <SamuraiSudokuGame onBackToMenu={handleBackToMenu} />

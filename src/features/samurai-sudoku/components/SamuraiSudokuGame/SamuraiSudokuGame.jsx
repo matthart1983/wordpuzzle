@@ -118,32 +118,6 @@ const SamuraiSudokuContent = ({ onBackToMenu }) => {
         </div>
       </div>
 
-      {gameState === 'completed' && (
-        <div className="samurai-completion-modal">
-          <div className="completion-content">
-            <h2>🏯 Samurai Sudoku Complete!</h2>
-            <div className="completion-stats">
-              <p><strong>Difficulty:</strong> {gameStats.difficulty}</p>
-              <p><strong>Time:</strong> {gameStats.time}</p>
-              <p><strong>Moves:</strong> {gameStats.moves}</p>
-              <p><strong>Hints Used:</strong> {gameStats.hintsUsed}</p>
-              <p><strong>Errors:</strong> {gameStats.errors}</p>
-            </div>
-            <div className="completion-actions">
-              <button onClick={() => handleNewGame(difficulty)}>
-                New Game
-              </button>
-              <button onClick={() => setShowHighScores(true)}>
-                View High Scores
-              </button>
-              <button onClick={onBackToMenu}>
-                Back to Menu
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {showSettings && (
         <SettingsModal
           isOpen={showSettings}

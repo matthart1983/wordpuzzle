@@ -16,6 +16,7 @@ const SamuraiControls = () => {
     undoMove,
     redoMove,
     useHint,
+    autoSolve,
     canUndo,
     canRedo
   } = useSamuraiSudoku();
@@ -27,16 +28,15 @@ const SamuraiControls = () => {
   };
 
   const handleAutoSolve = () => {
-    if (window.confirm('Auto-solve the puzzle? This will complete the entire game.')) {
-      // Auto-solve functionality to be implemented
-      console.log('Auto-solve not yet implemented');
+    if (window.confirm('Auto-solve the puzzle? This will complete the entire game and mark it as solved.')) {
+      autoSolve();
     }
   };
 
   const handleHint = () => {
     const hintUsed = useHint();
     if (!hintUsed) {
-      alert('No hints available for the current position.');
+      alert('No hints available! All empty cells are already filled or the puzzle is complete.');
     }
   };
 
@@ -148,7 +148,7 @@ const SamuraiControls = () => {
           <button
             className="control-btn tertiary"
             onClick={handleHint}
-            disabled={gameState?.status !== 'playing'}
+            disabled={gameState !== 'playing'}
             title="Get a hint"
           >
             💡 Hint
@@ -156,7 +156,7 @@ const SamuraiControls = () => {
           <button
             className="control-btn tertiary"
             onClick={handleAutoSolve}
-            disabled={gameState?.status !== 'playing'}
+            disabled={gameState !== 'playing'}
             title="Auto-solve puzzle"
           >
             🤖 Auto-Solve
@@ -169,45 +169,35 @@ const SamuraiControls = () => {
           <div className="progress-item">
             <span className="progress-label">Completed:</span>
             <span className="progress-value">
-              {gameState?.cellsCompleted || 0} / {21 * 21}
-            </span>
-            <div className="progress-bar">
-              <div 
-                className="progress-fill"
-                style={{ 
-                  width: `${((gameState?.cellsCompleted || 0) / (21 * 21)) * 100}%` 
-                }}
-              />
-            </div>
-          </div>
-          
-          <div className="progress-item">
-            <span className="progress-label">Accuracy:</span>
-            <span className="progress-value">
-              {(gameState?.totalMoves || 0) > 0 
-                ? Math.round((1 - (gameState?.mistakes || 0) / (gameState?.totalMoves || 1)) * 100)
-                : 100}%
+              {moves || 0} moves
             </span>
           </div>
           
           <div className="progress-item">
-            <span className="progress-label">Mistakes:</span>
+            <span className="progress-label">Errors:</span>
             <span className="progress-value mistakes">
-              {gameState?.mistakes || 0}
+              {errors || 0}
+            </span>
+          </div>
+          
+          <div className="progress-item">
+            <span className="progress-label">Hints Used:</span>
+            <span className="progress-value">
+              {hintsUsed || 0}
             </span>
           </div>
         </div>
       </div>
 
-      {gameState?.status === 'completed' && (
+      {gameState === 'completed' && (
         <div className="controls-section completion-message">
           <div className="completion-content">
             <h3>🎉 Congratulations!</h3>
             <p>You completed the Samurai Sudoku!</p>
             <div className="final-stats">
-              <span>Time: {formatTime(gameState?.gameTime || 0)}</span>
-              <span>Score: {(gameState?.score || 0).toLocaleString()}</span>
-              <span>Hints: {gameState?.hintsUsed || 0}</span>
+              <span>Time: {formatTime(timer || 0)}</span>
+              <span>Moves: {moves || 0}</span>
+              <span>Hints: {hintsUsed || 0}</span>
             </div>
           </div>
         </div>

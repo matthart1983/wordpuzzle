@@ -59,6 +59,97 @@
   border: 2px dashed var(--samurai-controls-border, #e9ecef);
 }
 
+/* Completion Modal */
+.samurai-completion-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.completion-content {
+  background-color: var(--bg-primary, #ffffff);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 3px solid var(--accent-primary, #2196f3);
+}
+
+.completion-content h2 {
+  margin: 0 0 24px 0;
+  font-size: 28px;
+  color: var(--text-primary, #333);
+  font-weight: 700;
+}
+
+.completion-stats {
+  margin: 24px 0;
+  text-align: left;
+}
+
+.completion-stats p {
+  margin: 8px 0;
+  font-size: 16px;
+  color: var(--text-primary, #333);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.completion-stats strong {
+  font-weight: 600;
+  color: var(--text-secondary, #666);
+}
+
+.completion-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.completion-actions button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.completion-actions button:first-child {
+  background-color: var(--accent-primary, #2196f3);
+  color: white;
+}
+
+.completion-actions button:first-child:hover {
+  background-color: var(--accent-dark, #1976d2);
+  transform: translateY(-1px);
+}
+
+.completion-actions button:not(:first-child) {
+  background-color: var(--bg-secondary, #f5f5f5);
+  color: var(--text-primary, #333);
+  border: 1px solid var(--border-light, #ddd);
+}
+
+.completion-actions button:not(:first-child):hover {
+  background-color: var(--bg-tertiary, #e9ecef);
+  transform: translateY(-1px);
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .stats-panel {

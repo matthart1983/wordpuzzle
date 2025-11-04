@@ -21,6 +21,10 @@ import {
   generateSamuraiPuzzle
 } from '../utils/samuraiGeneratorSimple.js';
 
+import {
+  generateHint
+} from '../utils/samuraiGenerator.js';
+
 import { saveHighScore } from '../../high-scores/utils/highScores.js';
 import { getUserDisplayName, getUserProfile } from '../../../shared/utils/userProfile.js';
 
@@ -43,6 +47,7 @@ const ACTIONS = {
   UPDATE_TIMER: 'UPDATE_TIMER',
   SET_DIFFICULTY: 'SET_DIFFICULTY',
   USE_HINT: 'USE_HINT',
+  AUTO_SOLVE: 'AUTO_SOLVE',
   TOGGLE_SETTING: 'TOGGLE_SETTING',
   LOAD_GAME: 'LOAD_GAME',
   SAVE_GAME: 'SAVE_GAME'
@@ -265,7 +270,7 @@ function samuraiSudokuReducer(state, action) {
       const cell = newGrid[hint.row][hint.col];
       
       cell.value = hint.value;
-      cell.state = CELL_STATES.USER;
+      cell.state = CELL_STATES.HINT;
       cell.notes.clear();
       
       return {
@@ -273,6 +278,31 @@ function samuraiSudokuReducer(state, action) {
         masterGrid: newGrid,
         hintsUsed: state.hintsUsed + 1,
         lastHint: hint
+      };
+    }
+    
+    case ACTIONS.AUTO_SOLVE: {
+      if (!state.solution) return state;
+      
+      const newGrid = state.masterGrid.map(r => r.map(c => ({ ...c, notes: new Set() })));
+      
+      // Fill in all empty cells with the solution
+      for (let row = 0; row < GRID_SIZE; row++) {
+        for (let col = 0; col < GRID_SIZE; col++) {
+          const cell = newGrid[row][col];
+          if (cell.belongsToGrids.length > 0 && !cell.isGiven && state.solution[row][col]) {
+            cell.value = state.solution[row][col];
+            cell.state = CELL_STATES.HINT;
+            cell.notes.clear();
+          }
+        }
+      }
+      
+      return {
+        ...state,
+        masterGrid: newGrid,
+        gameState: GAME_STATES.COMPLETED,
+        moves: state.moves + 1
       };
     }
     
@@ -445,8 +475,24 @@ export function SamuraiSudokuProvider({ children }) {
   }, []);
   
   const useHint = useCallback(() => {
+    // Check if there are any empty cells that can be hinted
+    const emptyCells = [];
+    for (let row = 0; row < GRID_SIZE; row++) {
+      for (let col = 0; col < GRID_SIZE; col++) {
+        const cell = state.masterGrid[row][col];
+        if (cell.belongsToGrids.length > 0 && !cell.isGiven && !cell.value && state.solution[row][col]) {
+          emptyCells.push({ row, col });
+        }
+      }
+    }
+    
+    if (emptyCells.length === 0) {
+      return false; // No hints available
+    }
+    
     dispatch({ type: ACTIONS.USE_HINT });
-  }, []);
+    return true;
+  }, [state.masterGrid, state.solution]);
   
   const pauseGame = useCallback(() => {
     dispatch({ type: ACTIONS.PAUSE_GAME });
@@ -457,9 +503,7 @@ export function SamuraiSudokuProvider({ children }) {
   }, []);
   
   const autoSolve = useCallback(() => {
-    // For now, just complete the game - in a full implementation this would solve the puzzle
-    dispatch({ type: ACTIONS.COMPLETE_GAME });
-    return true;
+    dispatch({ type: ACTIONS.AUTO_SOLVE });
   }, []);
   
   const getHint = useCallback(() => {
