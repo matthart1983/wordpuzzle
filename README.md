@@ -1,6 +1,6 @@
-# Word Puzzle Games
+# Word Puzzle Games (Multi‑Game Hub)
 
-A collection of engaging word puzzle games built with React and Vite. Currently includes Word Guess and Letter Hunt games.
+A collection of engaging puzzle games built with React and Vite. The app provides a unified launcher, shared UI, per‑game state, high scores, and theming.
 
 ## 🎮 Games Included
 
@@ -12,6 +12,21 @@ A collection of engaging word puzzle games built with React and Vite. Currently 
 - Share results functionality
 
 ### Letter Hunt
+### Sudoku Mini
+- 4×4 beginner-friendly Sudoku
+- Simple timer and local stats
+- Great for quick sessions
+
+### 2048
+- Classic 2048 tile-merging gameplay
+- Score, highest tile, and move count tracked
+
+### Samurai Sudoku (beta — currently hidden)
+- 21×21 Samurai (Gattai-5) with five overlapping 9×9 boards
+- React Context-based state management
+- Hint and Auto‑solve actions wired in the context and controls
+- Validation across overlapping regions
+- Feature‑flagged off in UI and routes while in beta
 - Find words using 7 given letters (must include center letter)
 - Scoring system with ranks from Beginner to Queen Bee
 - Pangram detection (words using all 7 letters)
@@ -20,12 +35,31 @@ A collection of engaging word puzzle games built with React and Vite. Currently 
 
 ## ✨ Features
 
-- **Multi-game interface**: Easy navigation between different puzzle games
+- **Multi-game interface**: Easy navigation between different puzzle games (Game Selector)
 - **Responsive design**: Works seamlessly on desktop and mobile devices
 - **Accessibility**: Support for keyboard navigation and screen readers
 - **Theme support**: Dark mode, high contrast, and color blind friendly options
 - **Local storage**: Game progress and statistics are saved locally
 - **Modern UI**: Clean, intuitive interface for optimal gaming experience
+- **High Scores**: Modal with per‑game and per‑difficulty leaderboards
+- **User Profile**: Avatar and display name stored locally
+
+## 🧩 Samurai Sudoku details (beta)
+
+- Grid: 21×21 canvas with five 9×9 boards placed at TL(0,0), TR(0,12), C(6,6), BL(12,0), BR(12,12)
+- State: `SamuraiSudokuContext.jsx` manages grid, selections, hint, and auto‑solve
+- UI: `SamuraiGrid`, `SamuraiCell`, `SamuraiControls`, wrapped by `SamuraiSudokuGame`
+- Validation: `samuraiValidator.js` enforces row/column/box rules across overlapping boards
+- Generation: `samuraiGenerator.js` and `samuraiGeneratorSimple.js`
+   - Simple generator uses pre‑verified patterns for stability in development
+- Testing/Dev: `SamuraiSudokuTest.jsx` provides a lightweight integration surface
+
+### Feature flags to show/hide Samurai Sudoku
+- Game Selector card: `src/shared/components/GameSelector/GameSelector.jsx` → `SHOW_SAMURAI`
+- App route gate: `src/App.jsx` → `SHOW_SAMURAI`
+- High Scores tab/content: `src/features/high-scores/components/HighScores.jsx` → `SHOW_SAMURAI`
+
+Set these flags to `true` to make Samurai Sudoku visible to users.
 
 ## 🚀 Getting Started
 
@@ -37,8 +71,8 @@ A collection of engaging word puzzle games built with React and Vite. Currently 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/word-puzzle-games.git
-cd word-puzzle-games
+git clone https://github.com/matthart1983/wordpuzzle.git
+cd wordpuzzle
 ```
 
 2. Install dependencies:
@@ -67,24 +101,43 @@ npm run build
 - **an-array-of-english-words**: Word dictionary for validation
 - **Local Storage**: Game state and statistics persistence
 
-## 📁 Project Structure
+## 🧱 Project Architecture
+
+The codebase is organized by feature. Each game lives under `src/features/<game>/` with its own components, context, and utils. Shared UI and cross‑game utilities live under `src/shared/`.
 
 ```
 src/
-├── components/          # Reusable UI components
-│   ├── GameSelector.jsx # Game selection interface
-│   ├── Header.jsx       # Common header component
-│   ├── wordguess/       # Word Guess-specific components
-│   └── letterhunt/      # Letter Hunt components
-├── context/             # React context providers
-│   ├── GameContext.jsx  # Word Guess game state
-│   └── SpellingBeeContext.jsx # Letter Hunt state
-├── utils/               # Utility functions
-│   ├── gameLogic.js     # Core game logic
-│   ├── spellingBeeLogic.js # Letter Hunt logic
-│   └── storage.js       # Local storage utilities
-└── App.jsx             # Main application component
+├─ features/
+│  ├─ wordle/                # Word Guess
+│  ├─ spelling-bee/          # Letter Hunt
+│  ├─ sudoku/                # Sudoku Mini
+│  ├─ samurai-sudoku/        # Samurai Sudoku (beta)
+│  │  ├─ components/
+│  │  │  ├─ SamuraiSudokuGame/
+│  │  │  ├─ SamuraiGrid/
+│  │  │  ├─ SamuraiCell/
+│  │  │  └─ SamuraiControls/
+│  │  ├─ context/
+│  │  │  └─ SamuraiSudokuContext.jsx
+│  │  └─ utils/
+│  │     ├─ samuraiModels.js
+│  │     ├─ samuraiValidator.js
+│  │     ├─ samuraiGenerator.js
+│  │     └─ samuraiGeneratorSimple.js
+│  └─ game2048/
+├─ shared/
+│  ├─ components/
+│  │  ├─ GameSelector/
+│  │  ├─ Header/
+│  │  └─ Modal/
+│  └─ utils/
+└─ App.jsx
 ```
+
+### High Scores
+- Component: `src/features/high-scores/components/HighScores.jsx`
+- Supports per‑game tabs and difficulty breakdowns
+- Samurai tab is hidden unless `SHOW_SAMURAI=true`
 
 ## 🎯 Game Rules
 
@@ -115,7 +168,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-This project is an original collection of word puzzle games created for educational and entertainment purposes.
+This project is an original collection of puzzle games created for educational and entertainment purposes.
 
 ## 🙏 Acknowledgments
 
@@ -129,3 +182,10 @@ This project is an original collection of word puzzle games created for educatio
 - Local storage integration for persistent game state
 - Comprehensive error handling and input validation
 - Optimized for performance with minimal re-renders
+
+## 🗒️ Change Summary (recent)
+- Added Sudoku Mini and 2048 to the game hub
+- Implemented Samurai Sudoku (beta): grid, validation, context, controls
+- Added hint and auto‑solve actions for Samurai; simplified dev generator
+- Introduced feature flags to hide Samurai from selector, routes, and high scores
+- High Scores modal with tabs and per‑difficulty breakdown
