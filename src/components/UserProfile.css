@@ -10,6 +10,65 @@
   border: 1px solid var(--color-border);
 }
 
+.user-profile-close-btn {
+  background: none;
+  border: none;
+  font-size: 2.2rem;
+  color: var(--color-text-secondary, #666);
+  cursor: pointer;
+  padding: 12px;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  line-height: 1;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.user-profile-close-btn:hover {
+  background: var(--color-key-hover, #e0e0e0);
+  color: var(--color-text);
+}
+
+.user-profile-close-btn:active {
+  background: var(--color-key-hover, #e0e0e0);
+  opacity: 0.7;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 24px;
+  background: var(--color-background);
+  position: relative;
+  text-align: center;
+  width: 100%;
+  border: none !important;
+  border-bottom: none !important;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .profile-content {
   padding: 24px;
   display: flex;

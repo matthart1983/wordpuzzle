@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useSudoku } from '../context/SudokuContext';
 import { getUserDisplayName, getUserProfile } from '../utils/userProfile';
+import { getSettings, updateSettings, initializeSettings } from '../utils/settings';
 import Header from './Header';
 import HighScores from './HighScores';
 import UserProfile from './UserProfile';
+import { SettingsModal } from './Modal';
 import { EMPTY_CELL, DIFFICULTY, GRID_SIZES } from '../utils/sudokuLogic';
 import './SudokuGame.css';
 
@@ -38,6 +40,8 @@ const SudokuGame = ({ onBackToMenu }) => {
   const [showDifficultyModal, setShowDifficultyModal] = useState(false);
   const [showHighScores, setShowHighScores] = useState(false);
   const [showUserProfile, setShowUserProfile] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [settings, setSettings] = useState(getSettings);
   const [userName, setUserName] = useState(getUserDisplayName());
   const [userAvatar, setUserAvatar] = useState(getUserProfile().avatar);
   const previousGridType = useRef(gridType);
@@ -54,6 +58,18 @@ const SudokuGame = ({ onBackToMenu }) => {
     const profile = getUserProfile();
     setUserName(getUserDisplayName());
     setUserAvatar(profile.avatar);
+  }, []);
+
+  // Handle settings changes
+  const handleSettingsChange = (newSettings) => {
+    const updatedSettings = updateSettings(newSettings);
+    setSettings(updatedSettings);
+  };
+
+  // Initialize settings on mount
+  useEffect(() => {
+    const initialSettings = initializeSettings();
+    setSettings(initialSettings);
   }, []);
 
   // Start new game when grid type changes (but not on initial mount)
@@ -311,6 +327,7 @@ const SudokuGame = ({ onBackToMenu }) => {
         userAvatar={userAvatar}
         onBackClick={onBackToMenu}
         onHighScoresClick={() => setShowHighScores(true)}
+        onSettingsClick={() => setShowSettings(true)}
         onUserProfileClick={() => setShowUserProfile(true)}
         showBackButton={true}
         showResetButton={false}
@@ -411,6 +428,14 @@ const SudokuGame = ({ onBackToMenu }) => {
           onClose={() => setShowHighScores(false)}
         />
       )}
+
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        settings={settings}
+        onSettingsChange={handleSettingsChange}
+      />
 
       {/* User Profile Modal */}
       {showUserProfile && (

@@ -1,7 +1,11 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useGame2048 } from '../context/Game2048Context';
+import { getUserDisplayName, getUserProfile } from '../utils/userProfile';
+import { getSettings, updateSettings, initializeSettings } from '../utils/settings';
 import Header from './Header';
 import HighScores from './HighScores';
+import UserProfile from './UserProfile';
+import { SettingsModal } from './Modal';
 import { getTileColor, GRID_SIZE } from '../utils/game2048Logic';
 import './Game2048.css';
 
@@ -36,6 +40,11 @@ const Game2048 = ({ onBackToMenu }) => {
   const [showStatsModal, setShowStatsModal] = useState(false);
   const [showHowToPlay, setShowHowToPlay] = useState(false);
   const [showHighScores, setShowHighScores] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showUserProfile, setShowUserProfile] = useState(false);
+  const [settings, setSettings] = useState(getSettings);
+  const [userName, setUserName] = useState(getUserDisplayName());
+  const [userAvatar, setUserAvatar] = useState(getUserProfile().avatar);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   
@@ -177,6 +186,25 @@ const Game2048 = ({ onBackToMenu }) => {
     startNewGame();
     setShowLoseModal(false);
   };
+
+  // Handle settings changes
+  const handleSettingsChange = (newSettings) => {
+    const updatedSettings = updateSettings(newSettings);
+    setSettings(updatedSettings);
+  };
+
+  // Handle user profile updates
+  const handleUserProfileUpdate = useCallback(() => {
+    const profile = getUserProfile();
+    setUserName(getUserDisplayName());
+    setUserAvatar(profile.avatar);
+  }, []);
+
+  // Initialize settings on mount
+  useEffect(() => {
+    const initialSettings = initializeSettings();
+    setSettings(initialSettings);
+  }, []);
   
   // Render grid with performance optimizations
   const renderGrid = useCallback(() => {
@@ -282,8 +310,12 @@ const Game2048 = ({ onBackToMenu }) => {
     <div className="game-2048">
       <Header 
         title="2048"
+        userName={userName}
+        userAvatar={userAvatar}
         onBackClick={onBackToMenu}
         onHighScoresClick={() => setShowHighScores(true)}
+        onSettingsClick={() => setShowSettings(true)}
+        onUserProfileClick={() => setShowUserProfile(true)}
         showBackButton={true}
         showResetButton={false}
         showHighScores={true}
@@ -442,6 +474,23 @@ const Game2048 = ({ onBackToMenu }) => {
         <HighScores
           gameType="2048"
           onClose={() => setShowHighScores(false)}
+        />
+      )}
+
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        settings={settings}
+        onSettingsChange={handleSettingsChange}
+      />
+
+      {/* User Profile Modal */}
+      {showUserProfile && (
+        <UserProfile
+          gameType="2048"
+          onClose={() => setShowUserProfile(false)}
+          onProfileUpdate={handleUserProfileUpdate}
         />
       )}
     </div>

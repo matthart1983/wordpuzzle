@@ -79,7 +79,7 @@ const UserProfile = ({ onClose, gameType = 'sudoku', onProfileUpdate }) => {
       <div className="modal user-profile-modal" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <h2>Player Profile</h2>
-          <button className="close-btn" onClick={handleClose}>×</button>
+          <button className="user-profile-close-btn" onClick={handleClose}>×</button>
         </div>
 
         <div className="profile-content">

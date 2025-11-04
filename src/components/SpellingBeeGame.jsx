@@ -1,15 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { SpellingBeeProvider, useSpellingBee } from '../context/SpellingBeeContext';
+import { getUserDisplayName, getUserProfile } from '../utils/userProfile';
+import { getSettings, updateSettings, initializeSettings } from '../utils/settings';
 import LetterHexagon from '../components/LetterHexagon';
 import WordInput from '../components/WordInput';
 import ScorePanel from '../components/ScorePanel';
 import FoundWords from '../components/FoundWords';
 import Header from '../components/Header';
 import HighScores from '../components/HighScores';
+import UserProfile from '../components/UserProfile';
+import { SettingsModal } from '../components/Modal';
 import './SpellingBeeGame.css';
 
 const SpellingBeeContent = ({ onBackToMenu }) => {
   const [showHighScores, setShowHighScores] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showUserProfile, setShowUserProfile] = useState(false);
+  const [settings, setSettings] = useState(getSettings);
+  const [userName, setUserName] = useState(getUserDisplayName());
+  const [userAvatar, setUserAvatar] = useState(getUserProfile().avatar);
   
   const {
     letters,
@@ -29,6 +38,25 @@ const SpellingBeeContent = ({ onBackToMenu }) => {
     shuffleLetters,
     newGame
   } = useSpellingBee();
+
+  // Handle settings changes
+  const handleSettingsChange = (newSettings) => {
+    const updatedSettings = updateSettings(newSettings);
+    setSettings(updatedSettings);
+  };
+
+  // Handle user profile updates
+  const handleUserProfileUpdate = useCallback(() => {
+    const profile = getUserProfile();
+    setUserName(getUserDisplayName());
+    setUserAvatar(profile.avatar);
+  }, []);
+
+  // Initialize settings on mount
+  useEffect(() => {
+    const initialSettings = initializeSettings();
+    setSettings(initialSettings);
+  }, []);
   
   // Handle keyboard input
   useEffect(() => {
@@ -65,12 +93,15 @@ const SpellingBeeContent = ({ onBackToMenu }) => {
   return (
     <div className="spelling-bee-game">
       <Header
+        title="LETTER HUNT"
+        userName={userName}
+        userAvatar={userAvatar}
         onStatsClick={() => {}} // TODO: Implement stats modal
-        onSettingsClick={() => {}} // TODO: Implement settings modal
+        onSettingsClick={() => setShowSettings(true)}
         onHighScoresClick={() => setShowHighScores(true)}
+        onUserProfileClick={() => setShowUserProfile(true)}
         onBackClick={onBackToMenu}
         onResetClick={newGame}
-        title="LETTER HUNT"
         gameState="playing"
         guesses={[]}
         showBackButton={true}
@@ -119,6 +150,23 @@ const SpellingBeeContent = ({ onBackToMenu }) => {
         <HighScores
           gameType="spelling-bee"
           onClose={() => setShowHighScores(false)}
+        />
+      )}
+
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        settings={settings}
+        onSettingsChange={handleSettingsChange}
+      />
+
+      {/* User Profile Modal */}
+      {showUserProfile && (
+        <UserProfile
+          gameType="spelling-bee"
+          onClose={() => setShowUserProfile(false)}
+          onProfileUpdate={handleUserProfileUpdate}
         />
       )}
     </div>

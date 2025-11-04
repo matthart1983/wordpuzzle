@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { GameProvider, useGame } from './context/GameContext';
 import { SpellingBeeProvider } from './context/SpellingBeeContext';
 import { SudokuProvider } from './context/SudokuContext';
 import { Game2048Provider } from './context/Game2048Context';
+import { getUserDisplayName, getUserProfile } from './utils/userProfile';
 import GameSelector from './components/GameSelector';
 import SpellingBeeGame from './components/SpellingBeeGame';
 import SudokuGame from './components/SudokuGame';
@@ -11,6 +12,7 @@ import Header from './components/Header';
 import GameBoard from './components/GameBoard';
 import Keyboard from './components/Keyboard';
 import HighScores from './components/HighScores';
+import UserProfile from './components/UserProfile';
 import { StatisticsModal, SettingsModal } from './components/Modal';
 import { GAME_STATES } from './utils/gameLogic';
 import './App.css';
@@ -37,6 +39,9 @@ const GameContent = ({ onBackToMenu }) => {
   const [showStats, setShowStats] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showHighScores, setShowHighScores] = useState(false);
+  const [showUserProfile, setShowUserProfile] = useState(false);
+  const [userName, setUserName] = useState(getUserDisplayName());
+  const [userAvatar, setUserAvatar] = useState(getUserProfile().avatar);
   
   // Handle keyboard input
   useEffect(() => {
@@ -68,6 +73,13 @@ const GameContent = ({ onBackToMenu }) => {
       addLetter(key);
     }
   };
+
+  // Handle user profile updates
+  const handleUserProfileUpdate = useCallback(() => {
+    const profile = getUserProfile();
+    setUserName(getUserDisplayName());
+    setUserAvatar(profile.avatar);
+  }, []);
   
   // Apply theme classes
   useEffect(() => {
@@ -100,9 +112,12 @@ const GameContent = ({ onBackToMenu }) => {
   return (
     <div className="app">
       <Header
+        userName={userName}
+        userAvatar={userAvatar}
         onStatsClick={() => setShowStats(true)}
         onSettingsClick={() => setShowSettings(true)}
         onHighScoresClick={() => setShowHighScores(true)}
+        onUserProfileClick={() => setShowUserProfile(true)}
         onBackClick={onBackToMenu}
         onResetClick={newGame}
         gameState={gameState}
@@ -153,6 +168,15 @@ const GameContent = ({ onBackToMenu }) => {
         <HighScores
           gameType="wordle"
           onClose={() => setShowHighScores(false)}
+        />
+      )}
+
+      {/* User Profile Modal */}
+      {showUserProfile && (
+        <UserProfile
+          gameType="wordle"
+          onClose={() => setShowUserProfile(false)}
+          onProfileUpdate={handleUserProfileUpdate}
         />
       )}
     </div>
