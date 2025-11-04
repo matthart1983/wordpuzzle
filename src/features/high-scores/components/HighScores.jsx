@@ -5,7 +5,7 @@ import '../styles/HighScores.css';
 const HighScores = ({ gameType, onClose }) => {
   // Feature flags
   const SHOW_SAMURAI = false; // hide Samurai scores UI
-  const SHOW_KENKEN = false; // hide KenKen tab until ready
+  const SHOW_KENKEN = true; // show KenKen tab
 
   const defaultTab = (!SHOW_SAMURAI && gameType === 'samurai-sudoku') ? 'sudoku' : (gameType || 'sudoku');
   const [activeGameTab, setActiveGameTab] = useState(defaultTab);

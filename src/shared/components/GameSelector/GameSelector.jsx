@@ -3,7 +3,7 @@ import './GameSelector.css';
 
 // Feature flags
 const SHOW_SAMURAI = false; // temporarily hide Samurai Sudoku from the main page
-const SHOW_KENKEN = false; // gate KenKen until ready
+const SHOW_KENKEN = true; // gate KenKen until ready
 
 const baseGames = [
   {

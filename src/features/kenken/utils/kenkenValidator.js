@@ -107,6 +107,7 @@ export const getCandidates = (r, c, grid, puzzle) => {
 };
 
 export const isSolved = (grid, puzzle) => {
+  if (!puzzle) return false;
   const size = grid.length;
   // All filled
   for (let r = 0; r < size; r++) {

@@ -23,7 +23,7 @@ import './styles/App.css';
 
 // Feature flags
 const SHOW_SAMURAI = false; // gate Samurai Sudoku feature app-wide
-const SHOW_KENKEN = false; // gate KenKen feature app-wide
+const SHOW_KENKEN = true; // gate KenKen feature app-wide
 
 const GameContent = ({ onBackToMenu }) => {
   const {
