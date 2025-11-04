@@ -49,10 +49,43 @@
   color: var(--color-text);
 }
 
-/* Sudoku Grid */
+/* Grid Size Selector */
+.grid-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.grid-selector label {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.grid-selector select {
+  padding: 8px 12px;
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.grid-selector select:focus {
+  outline: none;
+  border-color: var(--color-correct);
+}
+
+.grid-selector select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Sudoku Grid - Base Styles */
 .sudoku-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   gap: 2px;
   background: var(--color-border);
   border: 3px solid var(--color-border);
@@ -61,20 +94,40 @@
   margin: 10px 0;
 }
 
+/* 4x4 Grid */
+.sudoku-grid.grid-4x4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* 9x9 Grid */
+.sudoku-grid.grid-9x9 {
+  grid-template-columns: repeat(9, 1fr);
+}
+
 .sudoku-cell {
-  width: 60px;
-  height: 60px;
   background: var(--color-background);
   border: 1px solid var(--color-border-light);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
   user-select: none;
   position: relative;
+}
+
+/* Cell sizes for different grids */
+.grid-4x4 .sudoku-cell {
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+}
+
+.grid-9x9 .sudoku-cell {
+  width: 35px;
+  height: 35px;
+  font-size: 1rem;
 }
 
 .sudoku-cell:hover {
@@ -128,11 +181,21 @@
 /* Number Input Buttons */
 .number-buttons {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
   margin: 20px 0;
   width: 100%;
+}
+
+/* 4x4 grid number buttons */
+.number-buttons.grid-4x4-buttons {
+  grid-template-columns: repeat(4, 1fr);
   max-width: 280px;
+}
+
+/* 9x9 grid number buttons - split into rows */
+.number-buttons.grid-9x9-buttons {
+  grid-template-columns: repeat(5, 1fr);
+  max-width: 350px;
 }
 
 .number-btn {
@@ -174,7 +237,7 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   width: 100%;
-  max-width: 280px;
+  max-width: 320px;
   margin-top: 10px;
 }
 
@@ -422,11 +485,42 @@
   }
 }
 
+@media (max-width: 480px) {
+  .grid-selector {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+  
+  .grid-4x4 .sudoku-cell {
+    width: 50px;
+    height: 50px;
+    font-size: 1.3rem;
+  }
+  
+  .grid-9x9 .sudoku-cell {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+  
+  .number-buttons.grid-9x9-buttons {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 280px;
+  }
+}
+
 @media (max-width: 360px) {
-  .sudoku-cell {
+  .grid-4x4 .sudoku-cell {
     width: 45px;
     height: 45px;
     font-size: 1.2rem;
+  }
+  
+  .grid-9x9 .sudoku-cell {
+    width: 25px;
+    height: 25px;
+    font-size: 0.7rem;
   }
   
   .number-btn {

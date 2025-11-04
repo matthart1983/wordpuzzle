@@ -19,6 +19,8 @@ import {
   loadSettings,
   saveSettings
 } from '../utils/storage';
+import { saveHighScore } from '../utils/highScores';
+import { getUserDisplayName, getUserProfile } from '../utils/userProfile';
 
 const GameContext = createContext();
 
@@ -41,6 +43,7 @@ const initialState = {
   currentGuess: '',
   gameState: GAME_STATES.PLAYING,
   message: '',
+  startTime: Date.now(),
   statistics: {
     gamesPlayed: 0,
     gamesWon: 0,
@@ -111,6 +114,31 @@ const gameReducer = (state, action) => {
       if (newGameState === GAME_STATES.WON) {
         message = 'Congratulations!';
         updatedStats = updateStatistics(true, newGuesses.length);
+        
+        // Save high score for Wordle
+        const playerName = getUserDisplayName();
+        const playerProfile = getUserProfile();
+        const timeSeconds = Math.floor((Date.now() - state.startTime) / 1000);
+        
+        const gameData = {
+          gameType: 'wordle',
+          difficulty: 'Standard', // Wordle has one difficulty
+          gridSize: 'Standard', // 5x6 grid
+          timeSeconds: timeSeconds,
+          attempts: newGuesses.length,
+          maxAttempts: MAX_ATTEMPTS,
+          wordLength: WORD_LENGTH,
+          playerName: playerName,
+          playerAvatar: playerProfile.avatar || '📝'
+        };
+        
+        console.log('🎯 Wordle completed! Saving score for', playerName, 'in', newGuesses.length, 'attempts');
+        
+        try {
+          saveHighScore(gameData);
+        } catch (error) {
+          console.error('Failed to save Wordle high score:', error);
+        }
       } else if (newGameState === GAME_STATES.LOST) {
         message = `The word was ${state.targetWord}`;
         updatedStats = updateStatistics(false, 0);
@@ -169,6 +197,7 @@ const gameReducer = (state, action) => {
         currentGuess: '',
         gameState: GAME_STATES.PLAYING,
         message: '',
+        startTime: Date.now(),
         evaluations: [],
         keyboardStates: {}
       };

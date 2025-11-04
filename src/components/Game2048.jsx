@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useGame2048 } from '../context/Game2048Context';
 import Header from './Header';
+import HighScores from './HighScores';
 import { getTileColor, GRID_SIZE } from '../utils/game2048Logic';
 import './Game2048.css';
 
@@ -34,12 +35,13 @@ const Game2048 = ({ onBackToMenu }) => {
   const [showLoseModal, setShowLoseModal] = useState(false);
   const [showStatsModal, setShowStatsModal] = useState(false);
   const [showHowToPlay, setShowHowToPlay] = useState(false);
+  const [showHighScores, setShowHighScores] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   
   // Handle keyboard input
   const handleKeyPress = useCallback((e) => {
-    if (showWinModal || showLoseModal || showStatsModal || showHowToPlay) return;
+    if (showWinModal || showLoseModal || showStatsModal || showHowToPlay || showHighScores) return;
     
     switch (e.key) {
       case 'ArrowUp':
@@ -281,8 +283,10 @@ const Game2048 = ({ onBackToMenu }) => {
       <Header 
         title="2048"
         onBackClick={onBackToMenu}
+        onHighScoresClick={() => setShowHighScores(true)}
         showBackButton={true}
         showResetButton={false}
+        showHighScores={true}
       />
       
       <div className="game-container">
@@ -431,6 +435,14 @@ const Game2048 = ({ onBackToMenu }) => {
             </button>
           </div>
         </div>
+      )}
+      
+      {/* High Scores Modal */}
+      {showHighScores && (
+        <HighScores
+          gameType="2048"
+          onClose={() => setShowHighScores(false)}
+        />
       )}
     </div>
   );

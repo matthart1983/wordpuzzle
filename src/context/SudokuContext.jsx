@@ -6,9 +6,12 @@ import {
   validateInput,
   getHint,
   DIFFICULTY,
+  GRID_SIZES,
   EMPTY_CELL,
   createEmptyGrid
 } from '../utils/sudokuLogic';
+import { saveHighScore, recordGameAttempt } from '../utils/highScores';
+import { getUserDisplayName, getUserProfile } from '../utils/userProfile';
 
 // Game states
 export const GAME_STATES = {
@@ -25,6 +28,7 @@ const ACTIONS = {
   RESET_GAME: 'RESET_GAME',
   USE_HINT: 'USE_HINT',
   SET_DIFFICULTY: 'SET_DIFFICULTY',
+  SET_GRID_TYPE: 'SET_GRID_TYPE',
   PAUSE_GAME: 'PAUSE_GAME',
   RESUME_GAME: 'RESUME_GAME',
   INCREMENT_TIME: 'INCREMENT_TIME',
@@ -36,19 +40,21 @@ const ACTIONS = {
 // Initial state
 const initialState = {
   // Game grid state
-  puzzle: createEmptyGrid(),
-  currentGrid: createEmptyGrid(),
-  solution: createEmptyGrid(),
+  puzzle: createEmptyGrid('MINI'),
+  currentGrid: createEmptyGrid('MINI'),
+  solution: createEmptyGrid('MINI'),
   
-  // Game status
+  // Game configuration
+  gridType: 'MINI', // 'MINI' for 4x4, 'CLASSIC' for 9x9
   gameState: GAME_STATES.PLAYING,
-  difficulty: DIFFICULTY.MEDIUM,
+  difficulty: DIFFICULTY.MINI.MEDIUM,
   
   // Game tracking
   startTime: null,
   elapsedTime: 0,
   hintsUsed: 0,
   mistakes: 0,
+  scoreSaved: false, // Flag to prevent duplicate score saves
   
   // UI state
   selectedCell: null,
@@ -70,7 +76,7 @@ const sudokuReducer = (state, action) => {
       const newGrid = state.currentGrid.map(r => [...r]);
       
       // Validate the input
-      const validation = validateInput(newGrid, row, col, value);
+      const validation = validateInput(newGrid, row, col, value, state.gridType);
       
       if (!validation.valid) {
         return {
@@ -83,13 +89,53 @@ const sudokuReducer = (state, action) => {
       newGrid[row][col] = value;
       
       // Check if game is complete
-      const isComplete = isGridComplete(newGrid);
+      const isComplete = isGridComplete(newGrid, state.gridType);
       const newGameState = isComplete ? GAME_STATES.WON : state.gameState;
       
+      // Save high score if game is won (and not already saved)
+      // Only save if transitioning TO won state AND haven't saved yet
+      if (isComplete && state.gameState === GAME_STATES.PLAYING && newGameState === GAME_STATES.WON && !state.scoreSaved) {
+        const playerName = getUserDisplayName();
+        const playerProfile = getUserProfile();
+        
+        if (!state.startTime) {
+          console.error('ERROR: startTime is null! Cannot calculate game time.');
+          return {
+            ...state,
+            currentGrid: newGrid,
+            gameState: newGameState,
+            errorMessage: '',
+            selectedCell: isComplete ? null : state.selectedCell
+          };
+        }
+        
+        const timeSeconds = Math.floor((Date.now() - state.startTime) / 1000);
+        
+        const gameData = {
+          gameType: 'sudoku',
+          difficulty: state.difficulty.name,
+          gridSize: state.gridType,
+          timeSeconds: timeSeconds,
+          hintsUsed: state.hintsUsed,
+          mistakes: state.mistakes,
+          playerName: playerName,
+          playerAvatar: playerProfile.avatar || '👤'
+        };
+        
+        console.log('🎯 Game completed! Saving score for', playerName, 'in', timeSeconds, 'seconds');
+        
+        try {
+          saveHighScore(gameData);
+        } catch (error) {
+          console.error('Failed to save high score:', error);
+        }
+      }
+
       return {
         ...state,
         currentGrid: newGrid,
         gameState: newGameState,
+        scoreSaved: isComplete && state.gameState === GAME_STATES.PLAYING && newGameState === GAME_STATES.WON ? true : state.scoreSaved,
         errorMessage: '',
         selectedCell: isComplete ? null : state.selectedCell
       };
@@ -114,21 +160,23 @@ const sudokuReducer = (state, action) => {
     }
     
     case ACTIONS.NEW_GAME: {
-      const { puzzle, solution, difficulty } = action.payload.isRandom 
-        ? getRandomSudoku(action.payload.difficulty || state.difficulty)
-        : getTodaysSudoku(action.payload.difficulty || state.difficulty);
+      const difficulty = action.payload.difficulty || DIFFICULTY[state.gridType].MEDIUM;
+      const { puzzle, solution } = action.payload.isRandom 
+        ? getRandomSudoku(difficulty, state.gridType)
+        : getTodaysSudoku(difficulty, state.gridType);
       
       return {
         ...state,
         puzzle,
         currentGrid: puzzle.map(row => [...row]),
         solution,
-        difficulty: action.payload.difficulty || state.difficulty,
+        difficulty,
         gameState: GAME_STATES.PLAYING,
         startTime: Date.now(),
         elapsedTime: 0,
         hintsUsed: 0,
         mistakes: 0,
+        scoreSaved: false, // Reset score saved flag for new game
         selectedCell: null,
         errorMessage: ''
       };
@@ -143,13 +191,14 @@ const sudokuReducer = (state, action) => {
         elapsedTime: 0,
         hintsUsed: 0,
         mistakes: 0,
+        scoreSaved: false, // Reset score saved flag for reset game
         selectedCell: null,
         errorMessage: ''
       };
     }
     
     case ACTIONS.USE_HINT: {
-      const hint = getHint(state.currentGrid);
+      const hint = getHint(state.currentGrid, state.gridType);
       
       if (!hint) {
         return {
@@ -177,6 +226,28 @@ const sudokuReducer = (state, action) => {
       return {
         ...state,
         difficulty: action.payload
+      };
+    }
+    
+    case ACTIONS.SET_GRID_TYPE: {
+      const newGridType = action.payload;
+      const defaultDifficulty = DIFFICULTY[newGridType].MEDIUM;
+      
+      return {
+        ...state,
+        gridType: newGridType,
+        difficulty: defaultDifficulty,
+        puzzle: createEmptyGrid(newGridType),
+        currentGrid: createEmptyGrid(newGridType),
+        solution: createEmptyGrid(newGridType),
+        gameState: GAME_STATES.PLAYING,
+        startTime: null,
+        elapsedTime: 0,
+        hintsUsed: 0,
+        mistakes: 0,
+        scoreSaved: false, // Reset score saved flag for grid type change
+        selectedCell: null,
+        errorMessage: ''
       };
     }
     
@@ -339,6 +410,13 @@ export const SudokuProvider = ({ children }) => {
     });
   };
   
+  const setGridType = (gridType) => {
+    dispatch({
+      type: ACTIONS.SET_GRID_TYPE,
+      payload: gridType
+    });
+  };
+  
   const pauseGame = () => {
     dispatch({ type: ACTIONS.PAUSE_GAME });
   };
@@ -378,7 +456,7 @@ export const SudokuProvider = ({ children }) => {
     const testGrid = state.currentGrid.map(r => [...r]);
     testGrid[row][col] = EMPTY_CELL;
     
-    const validation = validateInput(testGrid, row, col, value);
+    const validation = validateInput(testGrid, row, col, value, state.gridType);
     return !validation.valid;
   };
   
@@ -393,6 +471,7 @@ export const SudokuProvider = ({ children }) => {
     resetGame,
     useHint,
     setDifficulty,
+    setGridType,
     pauseGame,
     resumeGame,
     setSelectedCell,
@@ -401,7 +480,11 @@ export const SudokuProvider = ({ children }) => {
     // Utilities
     formatTime,
     isCellGiven,
-    hasCellError
+    hasCellError,
+    
+    // Constants
+    GRID_SIZES,
+    DIFFICULTY
   };
   
   return (

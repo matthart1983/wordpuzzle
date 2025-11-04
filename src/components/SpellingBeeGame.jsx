@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SpellingBeeProvider, useSpellingBee } from '../context/SpellingBeeContext';
 import LetterHexagon from '../components/LetterHexagon';
 import WordInput from '../components/WordInput';
 import ScorePanel from '../components/ScorePanel';
 import FoundWords from '../components/FoundWords';
 import Header from '../components/Header';
+import HighScores from '../components/HighScores';
 import './SpellingBeeGame.css';
 
 const SpellingBeeContent = ({ onBackToMenu }) => {
+  const [showHighScores, setShowHighScores] = useState(false);
+  
   const {
     letters,
     centerLetter,
@@ -64,6 +67,7 @@ const SpellingBeeContent = ({ onBackToMenu }) => {
       <Header
         onStatsClick={() => {}} // TODO: Implement stats modal
         onSettingsClick={() => {}} // TODO: Implement settings modal
+        onHighScoresClick={() => setShowHighScores(true)}
         onBackClick={onBackToMenu}
         onResetClick={newGame}
         title="LETTER HUNT"
@@ -71,6 +75,7 @@ const SpellingBeeContent = ({ onBackToMenu }) => {
         guesses={[]}
         showBackButton={true}
         showResetButton={true}
+        showHighScores={true}
       />
       
       <main className="main-content">
@@ -108,6 +113,14 @@ const SpellingBeeContent = ({ onBackToMenu }) => {
           letters={letters}
         />
       </main>
+      
+      {/* High Scores Modal */}
+      {showHighScores && (
+        <HighScores
+          gameType="spelling-bee"
+          onClose={() => setShowHighScores(false)}
+        />
+      )}
     </div>
   );
 };

@@ -3,6 +3,7 @@
   /* Light theme colors */
   --color-background: #ffffff;
   --color-text: #000000;
+  --color-text-secondary: #6b7280;
   --color-border: #d3d6da;
   --color-tile-empty: #ffffff;
   --color-tile-correct: #6aaa64;
@@ -13,6 +14,12 @@
   --color-key-special: #818384;
   --color-modal-bg: #ffffff;
   --color-modal-overlay: rgba(0, 0, 0, 0.5);
+  
+  /* Additional colors for Sudoku and other games */
+  --color-correct: #6aaa64;
+  --color-correct-dark: #5a8a5a;
+  --color-key-background: #d3d6da;
+  --color-key-hover: #a8a8a8;
   
   /* Shadows */
   --shadow-tile: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -29,6 +36,7 @@
 .dark-theme {
   --color-background: #121213;
   --color-text: #ffffff;
+  --color-text-secondary: #9ca3af;
   --color-border: #3a3a3c;
   --color-tile-empty: #121213;
   --color-tile-correct: #538d4e;
@@ -36,21 +44,41 @@
   --color-tile-absent: #3a3a3c;
   --color-key-bg: #818384;
   --color-key-text: #ffffff;
-  --color-key-special: #818384;
-  --color-modal-bg: #121213;
+  --color-key-special: #565758;
+  --color-modal-bg: #1e1e1e;
+  
+  /* Additional colors for Sudoku and other games */
+  --color-correct: #538d4e;
+  --color-correct-dark: #4a7a4a;
+  --color-key-background: #818384;
+  --color-key-hover: #6a6a6a;
 }
 
 /* High contrast theme */
 .high-contrast {
+  --color-text-secondary: #4b5563;
   --color-tile-correct: #f5793a;
   --color-tile-present: #85c0f9;
   --color-tile-absent: #000000;
+  
+  /* Additional colors for Sudoku and other games */
+  --color-correct: #f5793a;
+  --color-correct-dark: #e55a1a;
+  --color-key-background: #d3d6da;
+  --color-key-hover: #a8a8a8;
 }
 
 /* Color blind friendly theme */
 .color-blind {
+  --color-text-secondary: #6b7280;
   --color-tile-correct: #f5793a;
   --color-tile-present: #85c0f9;
+  
+  /* Additional colors for Sudoku and other games */
+  --color-correct: #f5793a;
+  --color-correct-dark: #e55a1a;
+  --color-key-background: #d3d6da;
+  --color-key-hover: #a8a8a8;
 }
 
 /* Base styles */

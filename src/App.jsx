@@ -10,6 +10,7 @@ import Game2048 from './components/Game2048';
 import Header from './components/Header';
 import GameBoard from './components/GameBoard';
 import Keyboard from './components/Keyboard';
+import HighScores from './components/HighScores';
 import { StatisticsModal, SettingsModal } from './components/Modal';
 import { GAME_STATES } from './utils/gameLogic';
 import './App.css';
@@ -35,11 +36,12 @@ const GameContent = ({ onBackToMenu }) => {
   
   const [showStats, setShowStats] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showHighScores, setShowHighScores] = useState(false);
   
   // Handle keyboard input
   useEffect(() => {
     const handleKeyPress = (event) => {
-      if (showStats || showSettings) return;
+      if (showStats || showSettings || showHighScores) return;
       
       const key = event.key.toUpperCase();
       
@@ -100,12 +102,14 @@ const GameContent = ({ onBackToMenu }) => {
       <Header
         onStatsClick={() => setShowStats(true)}
         onSettingsClick={() => setShowSettings(true)}
+        onHighScoresClick={() => setShowHighScores(true)}
         onBackClick={onBackToMenu}
         onResetClick={newGame}
         gameState={gameState}
         guesses={guesses}
         showBackButton={true}
         showResetButton={true}
+        showHighScores={true}
       />
       
       <main className="main-content">
@@ -143,6 +147,14 @@ const GameContent = ({ onBackToMenu }) => {
         settings={settings}
         onSettingsChange={updateSettings}
       />
+      
+      {/* High Scores Modal */}
+      {showHighScores && (
+        <HighScores
+          gameType="wordle"
+          onClose={() => setShowHighScores(false)}
+        />
+      )}
     </div>
   );
 };

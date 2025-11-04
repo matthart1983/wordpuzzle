@@ -12,6 +12,8 @@ import {
   GAME_STATES,
   DIRECTIONS
 } from '../utils/game2048Logic';
+import { saveHighScore } from '../utils/highScores';
+import { getUserDisplayName, getUserProfile } from '../utils/userProfile';
 
 // Action types
 const ACTIONS = {
@@ -67,6 +69,34 @@ const game2048Reducer = (state, action) => {
       const newScore = state.score + result.score;
       const newGameState = getGameState(result.grid, state.hasWonBefore);
       const endTime = newGameState !== GAME_STATES.PLAYING ? Date.now() : null;
+      
+      // Save high score when first achieving victory (reaching 2048)
+      if (newGameState === GAME_STATES.WON && state.gameState !== GAME_STATES.WON && !state.hasWonBefore) {
+        const playerName = getUserDisplayName();
+        const playerProfile = getUserProfile();
+        const timeSeconds = Math.floor((endTime - state.startTime) / 1000);
+        const highestTile = getHighestTile(result.grid);
+        
+        const gameData = {
+          gameType: '2048',
+          difficulty: 'Standard', // 2048 has one difficulty
+          gridSize: '4x4',
+          timeSeconds: timeSeconds,
+          finalScore: newScore,
+          highestTile: highestTile,
+          totalMoves: state.moveCount + 1,
+          playerName: playerName,
+          playerAvatar: playerProfile.avatar || '🎮'
+        };
+        
+        console.log('🎯 2048 completed! Saving score for', playerName, 'with score', newScore);
+        
+        try {
+          saveHighScore(gameData);
+        } catch (error) {
+          console.error('Failed to save 2048 high score:', error);
+        }
+      }
       
       return {
         ...state,

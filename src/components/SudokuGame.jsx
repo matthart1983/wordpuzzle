@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useSudoku } from '../context/SudokuContext';
+import { getUserDisplayName, getUserProfile } from '../utils/userProfile';
 import Header from './Header';
-import { DIFFICULTY, GRID_SIZE, EMPTY_CELL } from '../utils/sudokuLogic';
+import HighScores from './HighScores';
+import UserProfile from './UserProfile';
+import { EMPTY_CELL, DIFFICULTY, GRID_SIZES } from '../utils/sudokuLogic';
 import './SudokuGame.css';
 
 const SudokuGame = ({ onBackToMenu }) => {
@@ -9,6 +12,7 @@ const SudokuGame = ({ onBackToMenu }) => {
     puzzle,
     currentGrid,
     gameState,
+    gridType,
     difficulty,
     elapsedTime,
     hintsUsed,
@@ -21,14 +25,45 @@ const SudokuGame = ({ onBackToMenu }) => {
     resetGame,
     useHint,
     setDifficulty,
+    setGridType,
     setSelectedCell,
     clearError,
     formatTime,
     isCellGiven,
-    hasCellError
+    hasCellError,
+    GRID_SIZES,
+    DIFFICULTY
   } = useSudoku();
   
   const [showDifficultyModal, setShowDifficultyModal] = useState(false);
+  const [showHighScores, setShowHighScores] = useState(false);
+  const [showUserProfile, setShowUserProfile] = useState(false);
+  const [userName, setUserName] = useState(getUserDisplayName());
+  const [userAvatar, setUserAvatar] = useState(getUserProfile().avatar);
+  const previousGridType = useRef(gridType);
+
+  // Stable click handler for new game button
+  const handleNewGameClick = useCallback((e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setShowDifficultyModal(true);
+  }, []);
+
+  // Function to update user name when profile changes
+  const handleUserProfileUpdate = useCallback(() => {
+    const profile = getUserProfile();
+    setUserName(getUserDisplayName());
+    setUserAvatar(profile.avatar);
+  }, []);
+
+  // Start new game when grid type changes (but not on initial mount)
+  useEffect(() => {
+    if (previousGridType.current !== gridType) {
+      const currentDifficulty = DIFFICULTY[gridType].MEDIUM;
+      startNewGame(currentDifficulty, true);
+      previousGridType.current = gridType;
+    }
+  }, [gridType]); // Only depend on gridType, not startNewGame
   const [showHowToPlay, setShowHowToPlay] = useState(false);
   
   // Handle cell click
@@ -67,8 +102,9 @@ const SudokuGame = ({ onBackToMenu }) => {
     const handleKeyPress = (e) => {
       if (!selectedCell || gameState === 'won') return;
       
+      const maxNum = GRID_SIZES[gridType].maxNum;
       const num = parseInt(e.key);
-      if (num >= 1 && num <= 4) {
+      if (num >= 1 && num <= maxNum) {
         e.preventDefault();
         handleNumberInput(num);
       } else if (e.key === 'Backspace' || e.key === 'Delete') {
@@ -84,7 +120,7 @@ const SudokuGame = ({ onBackToMenu }) => {
     
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [selectedCell, gameState, clearCell, setSelectedCell]);
+  }, [selectedCell, gameState, gridType, clearCell, setSelectedCell]);
   
   // Handle new game with difficulty
   const handleNewGame = (newDifficulty) => {
@@ -123,16 +159,25 @@ const SudokuGame = ({ onBackToMenu }) => {
     }
     
     // Subgrid borders
-    if (row === 1) classes.push('border-bottom');
-    if (col === 1) classes.push('border-right');
+    const gridSize = GRID_SIZES[gridType].size;
+    const subgridSize = GRID_SIZES[gridType].subgridSize;
+    
+    if ((row + 1) % subgridSize === 0 && row < gridSize - 1) {
+      classes.push('border-bottom');
+    }
+    if ((col + 1) % subgridSize === 0 && col < gridSize - 1) {
+      classes.push('border-right');
+    }
     
     return classes.join(' ');
   };
   
   // Render game grid
   const renderGrid = () => {
+    const gridSize = GRID_SIZES[gridType].size;
+    
     return (
-      <div className="sudoku-grid">
+      <div className={`sudoku-grid grid-${gridSize}x${gridSize}`}>
         {currentGrid.map((row, rowIndex) =>
           row.map((cell, colIndex) => (
             <div
@@ -150,9 +195,13 @@ const SudokuGame = ({ onBackToMenu }) => {
   
   // Render number input buttons
   const renderNumberButtons = () => {
+    const maxNum = GRID_SIZES[gridType].maxNum;
+    const numbers = Array.from({length: maxNum}, (_, i) => i + 1);
+    const gridSize = GRID_SIZES[gridType].size;
+    
     return (
-      <div className="number-buttons">
-        {[1, 2, 3, 4].map(num => (
+      <div className={`number-buttons grid-${gridSize}x${gridSize}-buttons`}>
+        {numbers.map(num => (
           <button
             key={num}
             className={`number-btn ${
@@ -175,7 +224,7 @@ const SudokuGame = ({ onBackToMenu }) => {
       <div className="game-controls">
         <button 
           className="control-btn"
-          onClick={() => setShowDifficultyModal(true)}
+          onClick={handleNewGameClick}
         >
           New Game
         </button>
@@ -227,16 +276,49 @@ const SudokuGame = ({ onBackToMenu }) => {
     );
   };
   
+  // Render grid size selector
+  const renderGridSelector = () => {
+    return (
+      <div className="grid-selector">
+        <label htmlFor="grid-size">Grid Size:</label>
+        <select 
+          id="grid-size"
+          value={gridType} 
+          onChange={(e) => setGridType(e.target.value)}
+          disabled={gameState === 'playing' && !isGridEmpty()}
+        >
+          <option value="MINI">4×4 Mini</option>
+          <option value="CLASSIC">9×9 Classic</option>
+        </select>
+      </div>
+    );
+  };
+
+  // Check if grid is empty (no moves made)
+  const isGridEmpty = () => {
+    return currentGrid.every(row => 
+      row.every((cell, colIndex) => 
+        cell === puzzle[currentGrid.indexOf(row)][colIndex]
+      )
+    );
+  };
+
   return (
     <div className="sudoku-game">
       <Header 
-        title="SUDOKU MINI"
+        title={gridType === 'MINI' ? "SUDOKU MINI" : "SUDOKU CLASSIC"}
+        userName={userName}
+        userAvatar={userAvatar}
         onBackClick={onBackToMenu}
+        onHighScoresClick={() => setShowHighScores(true)}
+        onUserProfileClick={() => setShowUserProfile(true)}
         showBackButton={true}
         showResetButton={false}
+        showHighScores={true}
       />
       
       <div className="game-container">
+        {renderGridSelector()}
         {renderStats()}
         
         {errorMessage && (
@@ -263,7 +345,7 @@ const SudokuGame = ({ onBackToMenu }) => {
           <div className="modal" onClick={e => e.stopPropagation()}>
             <h3>Select Difficulty</h3>
             <div className="difficulty-options">
-              {Object.values(DIFFICULTY).map(diff => (
+              {Object.values(DIFFICULTY[gridType]).map(diff => (
                 <button
                   key={diff.name}
                   className={`difficulty-btn ${difficulty.name === diff.name ? 'active' : ''}`}
@@ -320,6 +402,23 @@ const SudokuGame = ({ onBackToMenu }) => {
             </button>
           </div>
         </div>
+      )}
+
+      {/* High Scores Modal */}
+      {showHighScores && (
+        <HighScores
+          gameType="sudoku"
+          onClose={() => setShowHighScores(false)}
+        />
+      )}
+
+      {/* User Profile Modal */}
+      {showUserProfile && (
+        <UserProfile
+          gameType="sudoku"
+          onClose={() => setShowUserProfile(false)}
+          onProfileUpdate={handleUserProfileUpdate}
+        />
       )}
     </div>
   );

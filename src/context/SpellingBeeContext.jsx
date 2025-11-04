@@ -17,6 +17,8 @@ import {
   saveSettings,
   loadSettings
 } from '../utils/storage';
+import { saveHighScore } from '../utils/highScores';
+import { getUserDisplayName, getUserProfile } from '../utils/userProfile';
 
 const SpellingBeeContext = createContext();
 
@@ -44,6 +46,7 @@ const initialState = {
   currentRank: { name: 'Beginner', threshold: 0 },
   nextRankProgress: { nextRank: null, progress: 0, pointsNeeded: 0 },
   message: '',
+  startTime: Date.now(),
   isLoading: true
 };
 
@@ -109,6 +112,41 @@ const spellingBeeReducer = (state, action) => {
         message = `Pangram! +${points} points`;
       }
       
+      // Save high score when reaching significant milestones
+      const previousRank = state.currentRank;
+      const isNewRank = newCurrentRank.name !== previousRank.name;
+      const isQueenBee = newCurrentRank.name === 'Queen Bee';
+      const isMajorRank = ['Solid', 'Nice', 'Great', 'Amazing', 'Queen Bee'].includes(newCurrentRank.name);
+      
+      if (isNewRank && isMajorRank) {
+        const playerName = getUserDisplayName();
+        const playerProfile = getUserProfile();
+        const timeSeconds = Math.floor((Date.now() - state.startTime) / 1000);
+        const percentage = Math.round((newCurrentPoints / state.totalPossible) * 100);
+        
+        const gameData = {
+          gameType: 'spelling-bee',
+          difficulty: newCurrentRank.name,
+          gridSize: 'Standard',
+          timeSeconds: timeSeconds,
+          finalScore: newCurrentPoints,
+          totalPossiblePoints: state.totalPossible,
+          wordsFound: newFoundWords.length,
+          completionPercentage: percentage,
+          isQueenBee: isQueenBee,
+          playerName: playerName,
+          playerAvatar: playerProfile.avatar || '🐝'
+        };
+        
+        console.log('🎯 Spelling Bee milestone! Saving score for', playerName, 'reaching', newCurrentRank.name);
+        
+        try {
+          saveHighScore(gameData);
+        } catch (error) {
+          console.error('Failed to save Spelling Bee high score:', error);
+        }
+      }
+      
       const newState = {
         ...state,
         currentWord: '',
@@ -168,6 +206,7 @@ const spellingBeeReducer = (state, action) => {
         totalPossible: newTotalPossible,
         currentRank: getCurrentRank(0, newTotalPossible),
         nextRankProgress: getNextRankProgress(0, newTotalPossible),
+        startTime: Date.now(),
         message: ''
       };
       
