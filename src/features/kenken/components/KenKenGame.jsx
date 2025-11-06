@@ -3,6 +3,7 @@ import Header from '../../../shared/components/Header';
 import HighScores from '../../high-scores/components/HighScores';
 import { useKenKenGame } from '../hooks/useKenKenGame';
 import { saveHighScore } from '../../high-scores/utils/highScores';
+import KenKenKeyboard from './KenKenKeyboard';
 import './kenken.css';
 
 const SHOW_KENKEN = false; // feature flag; flip to true to expose in UI
@@ -249,6 +250,13 @@ const KenKenGame = ({ onBackToMenu }) => {
             <span className="stat-value">{state.notesMode ? 'Notes' : 'Values'}</span>
           </div>
         </div>
+        <KenKenKeyboard
+          size={state.size}
+          onNumberInput={actions.inputNumber}
+          onClear={actions.clearCell}
+          selectedCell={state.selected}
+          disabled={isSolved}
+        />
       </div>
 
       {showHighScores && (
